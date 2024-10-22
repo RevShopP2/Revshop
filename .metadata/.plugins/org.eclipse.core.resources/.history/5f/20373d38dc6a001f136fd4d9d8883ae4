@@ -1,0 +1,9 @@
+package dto;
+
+public class SellerDto {
+	private int s_
+	private String name;
+	private String email;
+	private String phno;
+	private String bus_type;
+}

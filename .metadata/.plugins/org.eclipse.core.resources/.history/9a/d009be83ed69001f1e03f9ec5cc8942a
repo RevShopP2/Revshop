@@ -1,0 +1,16 @@
+package util;
+import java.sql.*;
+public class DbConnect {
+	private static DbConnect instance;
+	private Connection con;
+	private DbConnect(){
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			con=DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommdb","root","Mahi2003@1234");
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	public static Db
+}

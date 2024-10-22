@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce Homepage</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        
+body {
+	margin: 0;
+	padding: 0;
+	background-color: #f4f4f4; /* Light grey background */
+	padding-top: 60px;
+	font-family: 'Poppins', sans-serif;
+}
+
+header {
+	display: flex;
+	flex-wrap: wrap; /* Allows items to wrap on smaller screens */
+	justify-content: space-between;
+	align-items: center;
+	background: rgb(238, 238, 213); /* Header background color */
+	padding: 10px 20px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	position: fixed; /* Fix the header to the top */
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 1000;
+}
+
+.logo img {
+	width: 50px; /* Set the width of the image */
+	height: 50px; /* Set the height of the image */
+	border-radius: 50%; /* Makes the image circular */
+	object-fit: cover; /* Ensures the image covers the container */
+	margin-right: 5px;
+	margin-left: 30px /* Space between the logo and other nav items */
+}
+
+/* Input search box styling */
+input[type="text"] {
+	border: 2px solid #ddd; /* Border color */
+	border-radius: 50px; /* Circular border */
+	padding: 10px 20px; /* Padding inside the input */
+	font-size: 16px; /* Font size for text inside input */
+	outline: none; /* Removes the default outline */
+	width: 680px; /* Adjust width of the search box */
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+input[type="text"]::placeholder {
+	color: #aaa; /* Color for the placeholder text */
+}
+
+/* Navigation */
+nav ul {
+	list-style: none;
+	display: flex;
+	gap: 15px;
+}
+
+nav ul li {
+	color: #fff; /* White text for navigation links */
+}
+
+/* Buttons */
+.account-icon, .cart-icon {
+	background: #fbfbfb; /* Light grey background */
+	color: #000000;
+	border: none;
+	padding: 10px 20px;
+	border-radius: 20px;
+	cursor: pointer;
+	transition: background 0.3s;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-size: 14px;
+}
+
+.account-icon:hover, .cart-icon:hover {
+	background: #865f1896; /* Darker grey on hover */
+}
+
+.cart-icon img, .account-icon img {
+	width: 20px;
+	height: 20px;
+}
+
+.dropdown {
+	position: relative;
+	display: inline-block;
+}
+
+.dropdown-menu {
+	display: none;
+	position: absolute;
+	background-color: #fff;
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+	/* Slight shadow for dropdown */
+	padding: 10px 0;
+	min-width: 200px;
+	right: 0;
+	z-index: 1;
+}
+
+.dropdown-menu li {
+	list-style: none;
+}
+
+.dropdown-menu li a {
+	color: #333;
+	padding: 10px 20px;
+	text-decoration: none;
+	display: block;
+	font-size: 14px;
+	transition: background-color 0.2s;
+}
+
+.dropdown-menu li a:hover {
+	background-color: #f1f1f1;
+}
+
+/* Show dropdown on hover */
+.dropdown:hover .dropdown-menu {
+	display: block;
+}
+
+/* Profile and Cart buttons container */
+.account-cart {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+/* Hover effect for profile and cart */
+.account-cart button:hover {
+	background-color: #f0f0f0;
+	transition: background-color 0.3s ease;
+}
+
+#search-btn {
+	background-color: #007bff; /* Button background color */
+	color: white; /* Button text color */
+	border: none; /* Remove border */
+	border-radius: 50px; /* Circular border */
+	padding: 10px 20px; /* Padding inside the button */
+	font-size: 16px; /* Font size for button text */
+	cursor: pointer; /* Change cursor on hover */
+	transition: background-color 0.3s; /* Smooth background transition */
+}
+.anchor {
+	text-decoration: none;
+	color: black;
+}
+/* Info Boxes */
+.info-boxes {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px;
+}
+
+.info-box {
+    background-color: #ffffff;
+    border-radius: 12px;
+    width: 200px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.info-box:hover {
+    transform: translateY(-5px);
+}
+
+.icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.image-button {
+    background-color: transparent; /* Makes button background transparent */
+    border: none; /* Removes any default button border */
+    cursor: pointer; /* Changes cursor to pointer when hovering */
+    display: inline-block; /* Align buttons inline */
+    padding: 0; /* Remove default padding */
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
+}
+
+/* Image inside the button */
+.image-button img {
+    border-radius: 15px; /* Rounds the corners */
+    border: 2px solid #000; /* Adds a solid black border */
+    width: 100%; /* Ensure the image fills the button */
+    height: auto; /* Maintain aspect ratio */
+    display: block; /* Removes bottom space caused by inline images */
+}
+
+.image-button {
+    width: auto; /* Default width for larger screens */
+    height: auto; /* Height adjusts automatically */
+}
+/* Product Cards */
+/* Styling the product grid to display items in a grid layout */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.card-body {
+    text-align: center;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.card-text {
+	color: #555;
+    display: -webkit-box; /* Ensure compatibility with webkit-based browsers */
+    -webkit-line-clamp: 2; /* Limit to 2 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden; /* Hide overflow content */
+    text-overflow: ellipsis; /* Add "..." for overflowing text */
+    height: 3rem; /* Ensure uniform card height */
+    margin-bottom: 1rem;
+    color: #555;
+}
+
+.btn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+.favorite-icon {
+    font-size: 1.5rem; /* Adjust size as needed */
+    margin-left: 10px;
+    transition: color 0.3s ease;
+   }
+   button {
+    background-color: #007bff; /* Button background color */
+    color: white; /* Button text color */
+    border: none; /* Remove border */
+    border-radius: 50px; /* Circular border */
+    padding: 10px 20px; /* Padding inside the button */
+    font-size: 16px; /* Font size for button text */
+    cursor: pointer; /* Change cursor on hover */
+    transition: background-color 0.3s; /* Smooth background transition */
+}
+
+button:hover {
+    background-color: #0056b3; /* Darker background on hover */
+}
+
+
+/* 
+@keyframes bounceIn {
+    0%, 100%, 20%, 50%, 80% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-20px);
+    }
+    60% {
+        transform: translateY(-10px);
+    }
+}
+
+.bounce-in {
+    opacity: 0;
+    animation: bounceIn 0.5s forwards;
+}
+
+.bounce-in.visible {
+    opacity: 1;
+} */
+
+#filter-bubble {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    z-index: 999;
+}
+
+#filter-bubble:hover {
+    background-color: #0056b3;
+    transform: scale(1.1);
+}
+#filter-popup {
+    display: none;
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    width: 300px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 999;
+}
+
+#filter-popup input,
+#filter-popup select {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .scrolling-animation {
+        transition: transform 0.4s ease; /* Slower transition for smaller screens */
+    }
+    .image-button {
+        width: auto; /* Smaller width for tablets */
+    }
+}
+
+@media (max-width: 480px) {
+    .scrolling-animation {
+        transform: translateY(50px); /* Shorter translate distance */
+    }
+    .image-button {
+        width: auto; /* Smaller width for mobile devices */
+    }
+}
+        /* CSS styles as per your provided file */
+    </style>
+</head>
+<body>
+ <body>
+<header>
+		<div class="logo">
+			<a th:href="@{/ecom/buyer/cancel}"> <img
+				th:src="@{/images/revshop-logo.jpg}">
+			</a>
+		</div>
+
+		<div class="search-container" style="margin-left: -20px;">
+			<form action="/products/search/buyerdashboard" method="post">
+				<input type="text" name="keyword" placeholder="Search for products"
+					th:value="${keyword}" id="search-input"
+					style="border-radius: 100px;"> <span id="mic-btn"
+					title="Click to speak" aria-label="Microphone"><svg
+						xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+						fill="currentColor" width="24px" height="24px">
+  <path
+							d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5.002 5.002 0 0 1-4 4.9V19h3a1 1 0 1 1 0 2h-8a1 1 0 1 1 0-2h3v-3.1a5.002 5.002 0 0 1-4-4.9 1 1 0 0 1 2 0 3 3 0 0 0 6 0 1 1 0 0 1 2 0z" />
+</svg> </span>
+				<button type="submit" id="search-btn" style="border-radius: 100px;">Search</button>
+			</form>
+		</div>
+
+		<div class="account-cart">
+			<div class="dropdown">
+				<button class="account-icon">
+					<span> <img
+						src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/profile-52e0dc.svg"
+						alt="profile">
+					</span> Profile
+				</button>
+				<ul class="dropdown-menu">
+					<li><a th:href="@{/ecom/buyer/buyerprofile}">My Profile</a></li>
+					<li><a th:href="@{/order/buyer}">Orders</a></li>
+					<li><a th:href="@{/wish/view}">Wishlist</a></li>
+
+					<li><a th:href="@{/ecom/buyer/Logout}">Logout</a></li>
+				</ul>
+			</div>
+			<a class="anchor" th:href="@{/cart/view}">
+				<button class="cart-icon">
+					<img
+						src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/header_cart-eed150.svg"
+						alt="Cart"> <span>Cart</span>
+				</button>
+			</a> <a class="anchor" th:href="@{/seller/buyer/sellerRegistration}"
+				id="sellerreg"><button class="account-icon">
+					<img
+						src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/Store-9eeae2.svg"
+						alt=" Become a Seller"> <span> Seller</span>
+				</button></a>
+			<button class="account-icon">
+				<img
+					src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/helpcenter-7d90c0.svg">
+			</button>
+		</div>
+	</header>
+
+<main>
+<div id="filter-bubble" onclick="togglePopup()">⚙</div>
+
+
+<div id="filter-popup">
+    <h3>Filter Products</h3>
+    <form action="/products/filter" method="get">
+    
+        <input type="text" name="keyword" th:value="${keyword}" placeholder="Search by name or category" required>
+        
+        <input type="number" name="minPrice" placeholder="Min Price">
+        <input type="number" name="maxPrice" placeholder="Max Price">
+        <select name="sortOrder">
+            <option value="asc">Price: Low to High</option>
+            <option value="desc">Price: High to Low</option>
+        </select>
+        <input type="hidden" name="source" value="loggedIn" />
+        <button type="submit">Apply Filters</button>
+    </form>
+</div>
+
+    <div class="container mt-5">
+        <h1 class="text-center">Product List</h1>
+        <div class="row">
+            <div th:each="product : ${products}" class="col-md-4">
+                <div class="card mb-4" th:id="'product-' + ${product.productId}">
+                    <a th:href="@{/products/{id}(id=${product.productId})}">
+                        <img th:src="@{${product.image}}" class="card-img-top" alt="Product Image">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${product.productName}">Product Name</h5>
+                        <p class="card-text" th:text="${product.productDescription}">Product Description</p>
+                        <p class="card-text">
+                            <strong th:text="'Price: $' + ${product.price}">Price: $XX.XX</strong>
+                        </p>
+
+                        <button class="btn" id="cart-btn-[[${product.productId}]]" 
+        th:class="${#lists.contains(cartItems, product.productId) ? 'btn-danger' : 'btn-outline-danger'}"
+        th:onclick="toggleCart([[${product.productId}]])">
+    <i th:class="${#lists.contains(cartItems, product.productId) ? 'fas fa-shopping-cart' : 'far fa-shopping-cart'}"></i>
+    <span th:text="${#lists.contains(cartItems, product.productId) ? 'Remove from Cart' : 'Add to Cart'}"></span>
+</button>
+
+<button class="wishlist-btn" id="wishlist-btn-[[${product.productId}]]"
+        th:class="${#lists.contains(wishlistItems, product.productId) ? 'fas fa-heart' : 'far fa-heart'}"
+        th:onclick="toggleWishlist([[${product.productId}]])">
+</button>
+                  
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+    function toggleCart(productId) {
+        fetch(`/cart/add?productId=${productId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update button text and icon dynamically
+                window.location.reload(); 
+                const button = document.getElementById(`cart-btn-${productId}`);
+                const isInCart = button.classList.contains('btn-danger');
+                if (isInCart) {
+                    button.classList.remove('btn-danger');
+                    button.classList.add('btn-outline-danger');
+                    button.querySelector('i').classList.remove('fas');
+                    button.querySelector('i').classList.add('far');
+                    button.querySelector('span').innerText = 'Add to Cart';
+                } else {
+                    button.classList.remove('btn-outline-danger');
+                    button.classList.add('btn-danger');
+                    button.querySelector('i').classList.remove('far');
+                    button.querySelector('i').classList.add('fas');
+                    button.querySelector('span').innerText = 'Remove from Cart';
+                }
+            } else {
+                alert('Failed to update cart');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+    function toggleWishlist(productId) {
+        fetch(`/wish/toggle?productId=${productId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+            	window.location.reload(); 
+                const button = document.getElementById(`wishlist-btn-${productId}`);
+                const isInWishlist = button.classList.contains('fas'); // 'fas' indicates a filled heart
+                if (isInWishlist) {
+                    button.classList.remove('fas');
+                    button.classList.add('far'); // 'far' indicates an empty heart
+                } else {
+                    button.classList.remove('far');
+                    button.classList.add('fas');
+                }
+            } else {
+                alert('Failed to update wishlist');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+<script>
+function togglePopup() {
+    const popup = document.getElementById('filter-popup');
+    if (popup.style.display === 'none' || popup.style.display === '') {
+        popup.style.display = 'block';
+    } else {
+        popup.style.display = 'none';
+    }
+}
+</script>
+<script>
+    const micBtn = document.getElementById('mic-btn');
+    const searchInput = document.getElementById('search-input');
+    const searchBtn = document.getElementById('search-btn');
+
+    if ('webkitSpeechRecognition' in window) {
+        const recognition = new webkitSpeechRecognition();
+        recognition.continuous = false; // Stops automatically after speaking
+        recognition.interimResults = false; // Only final results are needed
+        recognition.lang = 'en-US'; // Set language
+
+        micBtn.addEventListener('click', () => {
+            recognition.start(); // Start voice recognition
+        });
+
+        recognition.onresult = (event) => {
+            let transcript = event.results[0][0].transcript.trim(); // Trim whitespace
+            if (transcript.endsWith('.')) {
+                transcript = transcript.slice(0, -1); // Remove the trailing dot
+            }
+            searchInput.value = transcript; // Set input value to voice transcript
+            searchBtn.click(); // Automatically trigger search button click
+        };
+
+        recognition.onerror = (event) => {
+            console.error('Error occurred in recognition: ', event.error);
+        };
+    } else {
+        alert("Speech Recognition not supported on this browser. Try Chrome.");
+    }</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+<script src="https://kit.fontawesome.com/b71be40703.js" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Product</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f4f9;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            padding-top: 60px; /* To prevent content from being hidden under the fixed navbar */
+        }
+
+        header {
+            display: flex;
+            flex-wrap: wrap; /* Allows items to wrap on smaller screens */
+            justify-content: space-between;
+            align-items: center;
+            background: rgb(238, 238, 213); /* Header background color */
+            padding: 10px 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: fixed; /* Fix the header to the top */
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .logo img {
+            width: 50px; /* Set the width of the image */
+            height: 50px; /* Set the height of the image */
+            border-radius: 50%; /* Makes the image circular */
+            object-fit: cover; /* Ensures the image covers the container */
+            margin-right: 5px;
+            margin-left: 5px; /* Space between the logo and other nav items */
+        }
+
+        a {
+            text-decoration: none; /* Removes the underline from links */
+            color: inherit; /* Ensures the text color of links matches the parent */
+        }
+		
+        .account-cart {
+            display: flex;
+            align-items: center;
+            gap: 5px; /* Reduced gap to 5px */
+        }
+
+        .account-icon, .orders-btn, .dashboard-btn {
+            background: #fbfbfb; /* Light grey background */
+            color: #000000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+        }
+
+        .account-icon:hover, .orders-btn:hover, .dashboard-btn:hover {
+            background: #865f1896; /* Darker grey on hover */
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-menu {
+            display: none; /* Keep it hidden by default */
+            position: absolute;
+            background-color: #fff;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Slight shadow for dropdown */
+            padding: 10px 0;
+            min-width: 200px;
+            right: 0;
+            z-index: 1;
+        }
+
+        .dropdown-menu li {
+            list-style: none;
+        }
+
+        .dropdown-menu li a {
+            color: #333;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .dropdown-menu li a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .container {
+            margin-top: 70px; /* Add margin to accommodate fixed header */
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .btn-custom {
+            flex: 1;
+            margin: 0 5px;
+        }
+
+        .back-btn {
+            margin-top: 20px;
+            text-align: center; /* Center align the back button */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a th:href="@{/seller/SellerDashboard}">
+                <img th:src="@{/images/revshop-logo.jpg}">
+            </a>
+        </div>
+        
+        <div class="account-cart">
+			<button class="dashboard-btn">
+            <a th:href="@{/seller/SellerDashboard}">Dashboard</a>
+        </button>
+        <div class="header-buttons">
+        <div class="dropdown">
+            <button class="account-icon" onclick="toggleDropdown('profileDropdown')">
+                <span>
+                    <img src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/profile-52e0dc.svg" alt="Profile">
+                </span> 
+                Profile
+            </button>
+            <ul class="dropdown-menu" id="profileDropdown">
+                <li><a th:href="@{/seller/seller/sellerprofile}">My Profile</a></li>
+                <li><a th:href="@{/seller/manage}">Product Management</a></li>
+                <li><a th:href="@{/ecom/buyer/Logout}">Logout</a></li>
+            </ul>
+        </div>
+        
+        <div class="dropdown">
+            <button class="account-icon" onclick="toggleDropdown('ordersDropdown')">
+                Orders
+            </button>
+            <ul class="dropdown-menu" id="ordersDropdown">
+                <li><a th:href="@{/order/receivedOrders}">Received Orders</a></li>
+                <li><a th:href="@{/order/CompletedOrders}">Delivered Orders</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1>Update Product</h1>
+        
+        <!-- Form to update product with preloaded values -->
+        <form th:action="@{/products/update/{productId}(productId=${product.productId})}" method="post" th:object="${product}">
+            <div class="form-group">
+                <input type="hidden" name="sellerId" th:value="${sellerId}" />  <!-- Add this hidden field -->
+
+                <label for="productName">Product Name</label>
+                <input type="text" id="productName" name="productName" class="form-control" th:field="*{productName}" required>
+            </div>
+            <div class="form-group">
+                <label for="productDescription">Product Description</label>
+                <textarea id="productDescription" name="productDescription" class="form-control" th:field="*{productDescription}" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input type="number" id="price" name="price" class="form-control" th:field="*{price}" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label for="discountPrice">Discount Price</label>
+                <input type="number" id="discountPrice" name="discountPrice" class="form-control" th:field="*{discountPrice}" step="0.01">
+            </div>
+            <div class="form-group">
+                <label for="quantity">Quantity</label>
+                <input type="number" id="quantity" name="quantity" class="form-control" th:field="*{quantity}" required>
+            </div>
+            <div class="form-group">
+                <label for="image">Image URL</label>
+                <input type="text" id="image" name="image" class="form-control" th:field="*{image}">
+            </div>
+
+            <!-- Buttons to Update or Cancel -->
+            <div class="btn-group">
+                <button type="submit" class="btn btn-success btn-custom">Update</button>
+                <a th:href="@{/products/cancel/{sellerId}(sellerId=${sellerId})}" class="btn btn-secondary btn-custom">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    let openDropdown = null; // Variable to keep track of the currently open dropdown
+	
+	function toggleDropdown(dropdownId) {
+	    const dropdownMenu = document.getElementById(dropdownId);
+	    
+	    // Close the currently open dropdown if it's not the one being clicked
+	    if (openDropdown && openDropdown !== dropdownMenu) {
+	        openDropdown.style.display = 'none'; // Close the previous dropdown
+	    }
+
+	    // Toggle the clicked dropdown
+	    dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+
+	    // Update the currently open dropdown
+	    openDropdown = dropdownMenu.style.display === 'block' ? dropdownMenu : null; 
+	}
+
+	// Optional: Close dropdown when clicking outside
+	window.onclick = function(event) {
+	    if (!event.target.matches('.account-icon')) {
+	        const dropdowns = document.getElementsByClassName("dropdown-menu");
+	        for (let i = 0; i < dropdowns.length; i++) {
+	            const openDropdown = dropdowns[i];
+	            if (openDropdown.style.display === 'block') {
+	                openDropdown.style.display = 'none'; // Close the dropdown
+	            }
+	        }
+	        openDropdown = null; // Reset the currently open dropdown
+	    }
+	}
+    </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+package service;
+
+import dao.CategoryDao;
+import entity.CategoryEntity;
+
+public class CategoryService {
+	private CategoryDao categoryDao_obj=new CategoryDao();
+	public void add_product(CategoryEntity categoryEntity_obj) {
+		
+	}
+	public ProductDto display(SellerDto sellerDto_obj) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+}

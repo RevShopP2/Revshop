@@ -1,0 +1,16 @@
+package service;
+public class CategoryService {
+	private CategoryDao productDao_obj=new CategoryDao();
+	public void add_product(CategoryEntity categoryEntity_obj) {
+		if(productEntity_obj.getProduct_name().isEmpty()||productEntity_obj.getQuant()==0||productEntity_obj.getPrice_per_piece()==0) {
+			System.out.println("Something Wrong Try Again");
+		}
+		else {
+			productDao_obj.addProduct(productEntity_obj);
+		}
+	}
+	public ProductDto display(SellerDto sellerDto_obj) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+}

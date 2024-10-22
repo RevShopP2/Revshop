@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+ <script src="https://cdn.jsdelivr.net/sockjs/1.0.0/sockjs.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seller Dashboard</title>
+<style>
+body {
+	margin: 0;
+	padding: 0;
+	background-color: #f4f4f4; /* Light grey background */
+	padding-top: 60px;
+	font-family: 'Poppins', sans-serif;
+}
+
+header {
+	display: flex;
+	flex-wrap: wrap; /* Allows items to wrap on smaller screens */
+	justify-content: space-between;
+	align-items: center;
+	background: rgb(238, 238, 213); /* Header background color */
+	padding: 10px 20px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	position: fixed; /* Fix the header to the top */
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 1000;
+}
+button {
+    background: #fbfbfb;
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background 0.3s;
+    width: 150px; /* Ensures consistent button size */
+    text-align: center;
+}
+
+button a {
+    text-decoration: none;
+    color: inherit;
+    font-size: 14px;
+}
+.header-buttons {
+    flex: 3;
+    display: flex;
+    justify-content: space-evenly; /* Distribute buttons evenly across the header */
+    align-items: center;
+}
+.logo img {
+	width: 50px; /* Set the width of the image */
+	height: 50px; /* Set the height of the image */
+	border-radius: 50%; /* Makes the image circular */
+	object-fit: cover; /* Ensures the image covers the container */
+	margin-right: 5px;
+	margin-left: 5px /* Space between the logo and other nav items */
+}
+
+/* Input search box styling */
+input[type="text"] {
+	border: 2px solid #ddd; /* Border color */
+	border-radius: 50px; /* Circular border */
+	padding: 10px 20px; /* Padding inside the input */
+	font-size: 16px; /* Font size for text inside input */
+	outline: none; /* Removes the default outline */
+	width: 680px; /* Adjust width of the search box */
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+input[type="text"]::placeholder {
+	color: #aaa; /* Color for the placeholder text */
+}
+
+/* Navigation */
+nav ul {
+	list-style: none;
+	display: flex;
+	gap: 5px;
+}
+
+nav ul li {
+	color: #fff; /* White text for navigation links */
+}
+/* Updated gap and button styling */
+.account-cart {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Reduced gap to 5px */
+}
+
+.account-icon, .cart-icon, .dashboard-btn, .orders-btn {
+    background: #fbfbfb; /* Light grey background */
+    color: #000000;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+}
+
+.account-icon:hover, .cart-icon:hover, .dashboard-btn:hover, .orders-btn:hover {
+    background: #865f1896; /* Darker grey on hover */
+}
+
+.cart-icon img, .account-icon img {
+    width: 20px;
+    height: 20px;
+}
+
+/* Dropdown Menu Styling */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-menu {
+    display: none; /* Keep it hidden by default */
+    position: absolute;
+    background-color: #fff;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Slight shadow for dropdown */
+    padding: 10px 0;
+    min-width: 200px;
+    right: 0;
+    z-index: 1;
+}
+
+.dropdown-menu li {
+    list-style: none;
+}
+
+.dropdown-menu li a {
+    color: #333;
+    padding: 10px 20px;
+    text-decoration: none;
+    display: block;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.dropdown-menu li a:hover {
+    background-color: #f1f1f1;
+}
+
+
+.dashboard-container {
+	text-align: center;
+	margin-top: 120px;
+	color: #333;
+}
+
+h1 {
+	font-size: 36px;
+	margin-bottom: 20px;
+}
+.header-buttons {
+    flex: 3;
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+    align-items: center;
+}
+
+.dropdown {
+    position: relative;
+    margin-left: 15px; /* Space between dropdowns */
+}
+
+
+/* Grid layout for categories */
+.category-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr); /* 3 cards per row */
+	gap: 40px; /* Increase gap between cards */
+	padding: 20px;
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+/* Category card */
+.category-card {
+	perspective: 1500px; /* Perspective for 3D effect */
+	position: relative;
+	width: 260px;
+	height: 300px; /* Increase card size */
+	margin: 30px; /* Add margin to each card */
+}
+
+.card-inner {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	transition: transform 0.8s;
+	transform-style: preserve-3d;
+}
+
+.category-card:hover .card-inner {
+	transform: rotateY(180deg); /* Flip effect */
+}
+
+.card-front, .card-back {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	backface-visibility: hidden;
+	border-radius: 15px;
+	overflow: hidden;
+	box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Shadow for elevation */
+}
+
+/* Front of the card */
+.card-front {
+	background-color: #fff;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-start;
+	padding: 20px;
+	transition: all 0.3s ease;
+}
+
+.category-card:hover .card-front {
+	transform: translateY(-10px); /* Lift effect */
+}
+
+.card-front img {
+	width: 250px;
+	height: 250px; /* Larger images */
+	object-fit: cover;
+	border-radius: 10px;
+	margin-bottom: 10px;
+}
+
+.category-name {
+	font-weight: bold;
+	color: #333;
+	margin-top: 10px;
+	font-size: 20px; /* Larger font */
+	text-align: center;
+	margin-bottom: 0; /* Remove extra space after the title */
+}
+
+/* Back of the card with additional info */
+.card-back {
+	background-color: #aa8b9a; /* Pink shade background on flip */
+	color: white;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 20px;
+	transform: rotateY(180deg);
+}
+
+.card-back h3 {
+	font-size: 22px;
+	margin-bottom: 10px;
+}
+
+.card-back p {
+	font-size: 16px;
+	text-align: center;
+	padding: 0 10px;
+}
+
+/* Ensure cards don't overlap on hover */
+.category-card:hover {
+	z-index: 2; /* Bring card to front when hovered */
+}
+
+/* Responsive design for smaller screens */
+@media ( max-width : 768px) {
+	.category-grid {
+		grid-template-columns: repeat(2, 1fr); /* 2 cards per row */
+	}
+	.card-front img {
+		width: 180px;
+		height: 180px; /* Smaller images */
+	}
+}
+
+@media ( max-width : 480px) {
+	.category-grid {
+		grid-template-columns: 1fr; /* 1 card per row on small screens */
+	}
+	.card-front img {
+		width: 150px;
+		height: 150px;
+	}
+}
+.notification-popup {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #865f1896; /* Background color */
+    color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: none; /* Initially hidden */
+    z-index: 1001; /* Ensure it's above other elements */
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Close button styling */
+.notification-popup .close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+</style>
+</head>
+<body>
+<header>
+    <div class="logo">
+        <a th:href="@{/seller/SellerDashboard}">
+            <img th:src="@{/images/revshop-logo.jpg}">
+        </a>
+    </div>
+    
+    <div class="header-buttons">
+        <div class="dropdown">
+            <button class="account-icon" onclick="toggleDropdown('profileDropdown')">
+                <span>
+                    <img src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/profile-52e0dc.svg" alt="Profile">
+                </span> 
+                Profile
+            </button>
+            <ul class="dropdown-menu" id="profileDropdown">
+                <li><a th:href="@{/seller/seller/sellerprofile}">My Profile</a></li>
+                <li><a th:href="@{/seller/manage}">Product Management</a></li>
+                <li><a th:href="@{/ecom/buyer/Logout}">Logout</a></li>
+            </ul>
+        </div>
+        
+        <div class="dropdown">
+            <button class="account-icon" onclick="toggleDropdown('ordersDropdown')">
+                Orders
+            </button>
+            <ul class="dropdown-menu" id="ordersDropdown">
+                <li><a th:href="@{/order/receivedOrders}">Received Orders</a></li>
+                <li><a th:href="@{/order/CompletedOrders}">Delivered Orders</a></li>
+            </ul>
+        </div>
+    </div>
+</header>
+<p th:if="${sellerId != null}" th:text="${sellerId}" id="notifySeller" style="display: none;"></p>
+<div id="notification-popup" class="notification-popup">
+    <span id="notification-message"></span>
+    <button class="close-btn" onclick="closeNotification()">X</button>
+</div>
+	<div class="dashboard-container">
+		<h1>Choose a Category to Add Products</h1>
+		<div class="category-grid">
+			<!-- All 24 categories -->
+
+			<a th:href="@{/products/add(categoryId=1)}"> <!-- Category 1: TV -->
+				<div class="category-card">
+					<div class="card-inner">
+						<div class="card-front">
+
+							<img
+								src="https://rukminim2.flixcart.com/image/720/864/kzegk280/television/n/f/l/-original-imagbfa5afwchyue.jpeg?q=60&crop=false"
+								alt="TV">
+
+							<div class="category-name">TV</div>
+						</div>
+						<div class="card-back">
+							<h3>TV</h3>
+							<p>Find a wide selection of TVs from different brands with
+								great features and prices.</p>
+						</div>
+					</div>
+				</div>
+			</a>
+
+			<!-- Category 2: SmartPhones -->
+			<a th:href="@{/products/add(categoryId=2)}">
+				<div class="category-card">
+					<div class="card-inner">
+						<div class="card-front">
+
+							<img
+								src="https://5.imimg.com/data5/SELLER/Default/2024/5/420464956/TG/PX/IW/222515528/apple-iphone-15-128-gb-pink-250x250.jpg"
+								alt="SmartPhones">
+
+							<div class="category-name">SmartPhones</div>
+						</div>
+						<div class="card-back">
+							<h3>SmartPhones</h3>
+							<p>Explore our latest collection of smartphones with advanced
+								features and sleek designs.</p>
+						</div>
+					</div>
+				</div>
+			</a>
+
+			<!-- Category 3: Laptops -->
+			<a th:href="@{/products/add(categoryId=3)}">
+				<div class="category-card">
+					<div class="card-inner">
+						<div class="card-front">
+
+							<img
+								src="https://static-ecapac.acer.com/media/wysiwyg/Desktop-Banner_640x720_2_1.jpg"
+								alt="Laptops">
+
+							<div class="category-name">Laptops</div>
+						</div>
+						<div class="card-back">
+							<h3>Laptops</h3>
+							<p>Discover high-performance laptops for work, study, and
+								gaming needs.</p>
+						</div>
+					</div>
+				</div>
+			</a>
+
+			<!-- Category 4: T-Shirts -->
+			<a th:href="@{/products/add(categoryId=4)}">
+				<div class="category-card">
+					<div class="card-inner">
+						<div class="card-front">
+
+							<img
+								src="https://5.imimg.com/data5/SELLER/Default/2023/10/354886967/TI/DF/AE/100983625/tshirt-maroon-png-500x500.png"
+								alt="T-shirts">
+
+							<div class="category-name">T-Shirts</div>
+						</div>
+						<div class="card-back">
+							<h3>T-Shirts</h3>
+							<p>Shop our comfortable and stylish T-shirts available in
+								various sizes and colors.</p>
+						</div>
+					</div>
+				</div>
+			</a>
+			<!-- Category 5: Ear Buds -->
+			<a th:href="@{/products/add(categoryId=5)}">
+
+				<div class="category-card">
+					<div class="card-inner">
+						<div class="card-front">
+							<img
+								src="https://static.wixstatic.com/media/8f92dc_7034699e0d1b4c8e847f50101611b90f~mv2.jpg/v1/fill/w_320,h_320,q_90/8f92dc_7034699e0d1b4c8e847f50101611b90f~mv2.jpg"
+								alt="Ear Buds">
+							<div class="category-name">Ear Buds</div>
+						</div>
+						<div class="card-back">
+							<h3>Ear Buds</h3>
+							<p>Find the latest wireless and noise-canceling ear buds at
+								affordable prices.</p>
+						</div>
+					</div>
+				</div>
+			</a>
+
+
+			<!-- Category 6: Camera -->
+			<a th:href="@{/products/add(categoryId=6)}">
+
+				<div class="category-card">
+					<div class="card-inner">
+						<div class="card-front">
+							<img
+								src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRb-whPXEqeo89Ogjs6UM35Q1mKsh1oUnntOQ&s"
+								alt="Camera">
+
+							<div class="category-name">Camera</div>
+						</div>
+						<div class="card-back">
+							<h3>Camera</h3>
+							<p>Capture every moment with our collection of high-quality
+								cameras and accessories.</p>
+						</div>
+					</div>
+				</div>
+			</a>
+
+			<!-- Category 7: Toys -->
+			<a th:href="@{/products/add(categoryId=7)}">
+
+				<div class="category-card">
+					<div class="card-inner">
+						<div class="card-front">
+							<img
+								src="https://www.cnet.com/a/img/resize/af7a1129318b00fa6386dc1731cd14b09dc21eb8/hub/2023/10/02/a2702f0c-5206-4306-8fd2-ee703fe93259/pyxel.jpg?auto=webp&fit=crop&height=1200&width=1200"
+								alt="Toys">
+
+							<div class="category-name">Toys</div>
+						</div>
+						<div class="card-back">
+							<h3>Toys</h3>
+							<p>Explore a wide range of toys for kids of all ages.</p>
+						</div>
+					</div>
+				</div>
+			</a>
+
+			<!-- Category 8: Books -->
+			<a th:href="@{/products/add(categoryId=8)}">
+
+				<div class="category-card">
+					<div class="card-inner">
+						<div class="card-front">
+							<img
+								src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRla8erNGY2vUNsn9XyHiRQ0ri686Y3BMXkXA&s"
+								alt="Books">
+
+							<div class="category-name">Books</div>
+						</div>
+						<div class="card-back">
+							<h3>Books</h3>
+							<p>From fiction to self-help, explore our wide collection of
+								books.</p>
+						</div>
+					</div>
+				</div>
+			</a>
+			<!-- Category 9: Washing Machine -->
+			<a th:href="@{/products/add(categoryId=9)}">
+
+				<div class="category-card">
+					<div class="card-inner">
+						<div class="card-front">
+							<img
+								src="https://media3.bsh-group.com/Images/450x/19425132_Siemens_Home_Appliances_Brand_Reshape_Laundry_Care_Washin_Machines_Mobile_Stage_9_16.jpg"
+								alt="Washing Machine">
+
+							<div class="category-name">Washing Machine</div>
+						</div>
+						<div class="card-back">
+							<h3>Washing Machine</h3>
+							<p>Discover a variety of high-efficiency washing machines for
+								your laundry needs.</p>
+						</div>
+					</div>
+				</div>
+			</a>
+			<!-- Category 10: Air Conditioners -->
+			<a th:href="@{/products/add(categoryId=10)}">
+
+				<div class="category-card">
+					<div class="card-inner">
+						<div class="card-front">
+							<img
+								src="https://images.samsung.com/is/image/samsung/assets/in/AR18CY5AMWK_296x352.jpg?$296_352_JPG$"
+								alt="AC">
+
+							<div class="category-name">Air Conditioners</div>
+						</div>
+						<div class="card-back">
+							<h3>Air Conditioners</h3>
+							<p>Stay cool with our selection of energy-efficient air
+								conditioners.</p>
+						</div>
+					</div>
+				</div>
+			</a>
+			<!-- Category 11: Hoodies -->
+			<a th:href="@{/products/add(categoryId=11)}">
+
+				<div class="category-card">
+					<div class="card-inner">
+						<div class="card-front">
+							<img
+								src="https://www.siatex.com/wp-content/uploads/2024/02/Hoodies-Manufacturer-in-Bangladesh-550x550.jpeg.webp"
+								alt="Hoodies">
+
+							<div class="category-name">Hoodies</div>
+						</div>
+						<div class="card-back">
+							<h3>Hoodies</h3>
+							<p>Shop for cozy and stylish hoodies in various colors and
+								designs.</p>
+						</div>
+					</div>
+				</div>
+			</a>
+			<!-- Category 12: Pants -->
+			<a th:href="@{/products/add(categoryId=12)}">
+
+				<div class="category-card">
+					<div class="card-inner">
+						<div class="card-front">
+							<img
+								src="https://images.meesho.com/images/products/142481028/0hhnj_512.webp"
+								alt="Pants">
+
+							<div class="category-name">Pants</div>
+						</div>
+						<div class="card-back">
+							<h3>Pants</h3>
+							<p>Explore a range of pants suitable for casual, work, and
+								athletic wear.</p>
+						</div>
+					</div>
+				</div>
+			</a>
+			<!-- Category 13: Shirts -->
+			<a th:href="@{/products/add(categoryId=13)}">
+
+				<div class="category-card">
+					<div class="card-inner">
+						<div class="card-front">
+							<img
+								src="https://www.jiomart.com/images/product/original/rvngltiopt/baleshwar-man-s-solid-slim-fit-casual-shirt-for-men-shirts-bl-xxl-product-images-rvngltiopt-0-202303061154.jpg?im=Resize=(500,630)"
+								alt="Shirts">
+
+							<div class="category-name">Shirts</div>
+						</div>
+						<div class="card-back">
+							<h3>Shirts</h3>
+							<p>Find classic and modern shirts in a variety of designs.</p>
+						</div>
+					</div>
+				</div>
+			</a>
+			<!-- Category 14: Furniture -->
+			<a th:href="@{/products/add(categoryId=14)}">
+
+				<div class="category-card">
+					<div class="card-inner">
+						<div class="card-front">
+							<img
+								src="https://images-cdn.ubuy.co.in/6356b3a5c2926a7d140892e4-a-beautiful-high-quality-living-room.jpg"
+								alt="Furniture">
+
+							<div class="category-name">Furniture</div>
+						</div>
+						<div class="card-back">
+							<h3>Furniture</h3>
+							<p>Upgrade your home with beautiful and high-quality
+								furniture pieces.</p>
+						</div>
+					</div>
+				</div>
+			</a>
+			<!-- Category 15: Video Games -->
+			<a th:href="@{/products/add(categoryId=15)}">
+
+				<div class="category-card">
+					<div class="card-inner">
+						<div class="card-front">
+							<img
+								src="https://media.cnn.com/api/v1/images/stellar/prod/i-stock-1287493837-1.jpg?q=h_1194,w_2121,x_0,y_0"
+								alt="Video Games">
+
+							<div class="category-name">Video Games</div>
+						</div>
+						<div class="card-back">
+							<h3>Video Games</h3>
+							<p>Enjoy the latest and most popular video games for all
+								consoles.</p>
+						</div>
+					</div>
+				</div>
+			</a>
+			<!-- Category 16: Jewellery -->
+			<a th:href="@{/products/add(categoryId=16)}">
+
+				<div class="category-card">
+					<div class="card-inner">
+						<div class="card-front">
+							<img
+								src="https://m.media-amazon.com/images/I/81aUa3LrDzL.AC_UY1100.jpg"
+								alt="Jewellery">
+
+							<div class="category-name">Jewellery</div>
+						</div>
+						<div class="card-back">
+							<h3>Jewellery</h3>
+							<p>Shop for beautiful and timeless jewellery pieces.</p>
+						</div>
+					</div>
+				</div>
+			</a>
+			<!-- Category 17: Footwear -->
+			<a th:href="@{/products/add(categoryId=17)}">
+
+				<div class="category-card">
+					<div class="card-inner">
+						<div class="card-front">
+							<img
+								src="https://assets.myntassets.com/dpr_1.5,q_60,w_400,c_limit,fl_progressive/assets/images/14617690/2022/6/30/ee3b4815-2b64-45f9-8045-04b9a99778c01656562021621-Power-Men-Grey-Leather-Road-Running-Non-Marking-Shoes-320165-1.jpg"
+								alt="Footwear">
+
+							<div class="category-name">Footwear</div>
+						</div>
+						<div class="card-back">
+							<h3>Footwear</h3>
+							<p>Find comfortable and stylish footwear for all occasions.</p>
+						</div>
+					</div>
+				</div>
+			</a>
+			<!-- Category 18: Household -->
+			<a th:href="@{/products/add(categoryId=18)}">
+
+				<div class="category-card">
+					<div class="card-inner">
+						<div class="card-front">
+							<img
+								src="https://www.keckmedicine.org/wp-content/uploads/2021/11/Household-cleaning-products.jpg"
+								alt="Household">
+
+							<div class="category-name">Household</div>
+						</div>
+						<div class="card-back">
+							<h3>Household</h3>
+							<p>Get all your essential household items and cleaning
+								products.</p>
+						</div>
+					</div>
+				</div>
+			</a>
+			<!-- Category 19: Chocolates -->
+			<a th:href="@{/products/add(categoryId=19)}">
+
+				<div class="category-card">
+					<div class="card-inner">
+						<div class="card-front">
+							<img src="https://m.media-amazon.com/images/I/71w7ppkACUL.jpg"
+								alt="Chocolates">
+
+							<div class="category-name">Chocolates</div>
+						</div>
+						<div class="card-back">
+							<h3>Chocolates</h3>
+							<p>Indulge in our wide selection of delicious chocolates.</p>
+						</div>
+					</div>
+				</div>
+			</a>
+			<!-- Category 20: Printers -->
+			<a th:href="@{/products/add(categoryId=20)}">
+
+				<div class="category-card">
+					<div class="card-inner">
+						<div class="card-front">
+							<img
+								src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUZMIjER6eVnCPa1qU5ptX_XjXKFeXc8-p9Q&s"
+								alt="Printers">
+
+							<div class="category-name">Printers</div>
+						</div>
+						<div class="card-back">
+							<h3>Printers</h3>
+							<p>Browse our collection of reliable and high-quality
+								printers.</p>
+						</div>
+					</div>
+				</div>
+			</a>
+			<!-- Category 21: Mobile Accessories -->
+			<a th:href="@{/products/add(categoryId=21)}">
+
+				<div class="category-card">
+					<div class="card-inner">
+						<div class="card-front">
+							<img
+								src="https://www.gizchina.com/wp-content/uploads/images/2023/03/mobile-phone-accessories.jpg"
+								alt="Mobile Accessories">
+
+							<div class="category-name">Mobile Accessories</div>
+						</div>
+						<div class="card-back">
+							<h3>Mobile Accessories</h3>
+							<p>Find all the accessories you need for your smartphones.</p>
+						</div>
+					</div>
+				</div>
+			</a>
+			<!-- Category 22: Musical Instruments -->
+			<a th:href="@{/products/add(categoryId=22)}">
+
+				<div class="category-card">
+					<div class="card-inner">
+						<div class="card-front">
+							<img
+								src="https://www.euroschoolindia.com/wp-content/uploads/2023/10/different-types-of-indian-musical-instruments-jpg.webp"
+								alt="Musical Instruments">
+
+							<div class="category-name">Musical Instruments</div>
+						</div>
+						<div class="card-back">
+							<h3>Musical Instruments</h3>
+							<p>Shop for a wide range of musical instruments for all
+								levels of players.</p>
+						</div>
+					</div>
+				</div>
+			</a>
+			<!-- Category 23: Bikes -->
+			<a th:href="@{/products/add(categoryId=23)}">
+
+				<div class="category-card">
+					<div class="card-inner">
+						<div class="card-front">
+							<img
+								src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWWKigDkIfp1ICADh1NtqgGcTU0Xw9bkjCPw&s"
+								alt="Bikes">
+
+							<div class="category-name">Bikes</div>
+						</div>
+						<div class="card-back">
+							<h3>Bikes</h3>
+							<p>Get your hands on the latest and most durable bikes for
+								all terrains.</p>
+						</div>
+					</div>
+				</div>
+
+			</a>
+			<!-- Category 24: Speakers -->
+
+			<a th:href="@{/products/add(categoryId=24)}">
+			<div class="category-card">
+				<div class="card-inner">
+					<div class="card-front">
+						<img
+							src="https://3.imimg.com/data3/TW/QO/MY-2229073/computer-speaker-500x500.jpg"
+							alt="Speakers">
+
+						<div class="category-name">Speakers</div>
+					</div>
+					<div class="card-back">
+						<h3>Speakers</h3>
+						<p>Experience crystal-clear sound with our range of speakers
+							and sound systems.</p>
+
+					</div>
+				</div>
+
+			</div>
+			</a>
+			<a th:href="@{/products/add(categoryId=25)}">
+			<div class="category-card">
+				<div class="card-inner">
+					<div class="card-front">
+						<img
+							src="https://media.gq-magazine.co.uk/photos/60745c56e64c72d60de685c3/master/pass/12032021_WV_HP.jpg"
+							alt="Watches">
+
+						<div class="category-name">Watches</div>
+					</div>
+					<div class="card-back">
+						<h3>Watches</h3>
+						<p>Get smart watches with</p>
+
+					</div>
+				</div>
+
+			</div>
+			</a>
+			<a th:href="@{/products/add(categoryId=26)}">
+
+				<div class="category-card">
+					<div class="card-inner">
+						<div class="card-front">
+							<img
+							src="https://images.meesho.com/images/products/311225678/l7nvc_1200.jpg"
+							alt="Shoes">
+
+							<div class="category-name">Shoes</div>
+						</div>
+						<div class="card-back">
+							<h3>Shoes</h3>
+							<p>Experience crystal-clear shoes quality</p>
+						</div>
+					</div>
+				</div>
+
+			</a>
+
+		</div>
+	</div>
+	<script>
+	let openDropdown = null; // Variable to keep track of the currently open dropdown
+
+	function toggleDropdown(dropdownId) {
+	    const dropdownMenu = document.getElementById(dropdownId);
+	    
+	    // Close the currently open dropdown if it's not the one being clicked
+	    if (openDropdown && openDropdown !== dropdownMenu) {
+	        openDropdown.style.display = 'none'; // Close the previous dropdown
+	    }
+
+	    // Toggle the clicked dropdown
+	    dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+
+	    // Update the currently open dropdown
+	    openDropdown = dropdownMenu.style.display === 'block' ? dropdownMenu : null; 
+	}
+
+	// Optional: Close dropdown when clicking outside
+	window.onclick = function(event) {
+	    if (!event.target.matches('.account-icon')) {
+	        const dropdowns = document.getElementsByClassName("dropdown-menu");
+	        for (let i = 0; i < dropdowns.length; i++) {
+	            const openDropdown = dropdowns[i];
+	            if (openDropdown.style.display === 'block') {
+	                openDropdown.style.display = 'none'; // Close the dropdown
+	            }
+	        }
+	        openDropdown = null; // Reset the currently open dropdown
+	    }
+	}
+	const sellerId1 = document.getElementById('notifySeller').textContent.trim();
+	const sellerIdInt = parseInt(sellerId1, 10);
+	// Existing WebSocket connection code
+	var socket = new SockJS('http://localhost:8005/ws');
+	var stompClient = Stomp.over(socket);
+
+	stompClient.connect({}, function (frame) {
+	    // Subscribe to the topic for real-time notifications
+	    stompClient.subscribe('/topic/orders/' + sellerIdInt, function (notification) {
+	        // Display the notification in the pop-up
+	        showNotification(notification.body);
+	    });
+	});
+
+	// Function to show the notification pop-up
+	function showNotification(message) {
+	    const popup = document.getElementById('notification-popup');
+	    const messageElement = document.getElementById('notification-message');
+	    
+	    messageElement.innerHTML = message;  // Set the notification message
+	    popup.style.display = 'block';  // Show the pop-up
+
+	    // Automatically hide the pop-up after 5 seconds
+	    setTimeout(() => {
+	        popup.style.display = 'none';
+	    }, 5000);
+	}
+
+	// Function to manually close the notification pop-up
+	function closeNotification() {
+	    const popup = document.getElementById('notification-popup');
+	    popup.style.display = 'none';
+	}
+
+	</script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+package entity;
+
+public class CategoryEntity {
+	private int p_id;
+	private int s_id;
+	private String cname;
+	
+}

@@ -1,0 +1,28 @@
+package service;
+import exception.InvalidInputException;
+import exception.UserNotFoundException;
+import entity.SellerEntity;
+import dao.SellerDao;
+import dto.SellerDto;
+public class SellerService {
+	private SellerDao sellerdao_obj =new SellerDao();
+	public void register(SellerEntity sellerEntity_obj) throws InvalidInputException {
+		if (sellerEntity_obj.getName().isEmpty() || sellerEntity_obj.getEmail().isEmpty() || sellerEntity_obj.getPassword().isEmpty() || 
+				sellerEntity_obj.getPhno().isEmpty()  || sellerEntity_obj.getBus_name().isEmpty() || sellerEntity_obj.getBus_type().isEmpty()  || sellerEntity_obj.getBus_address().isEmpty()) {
+            throw new InvalidInputException("Check All the fields are correctly entered or not.......");
+        }
+		else {
+			sellerdao_obj.addSeller(sellerEntity_obj);
+		}
+	}
+	public SellerDto login(String email, String pwd) throws UserNotFoundException {
+		SellerEntity sellerEntity_obj=sellerdao_obj.getSellerByEmail(email);
+		if (sellerEntity_obj == null || !sellerEntity_obj.getPassword().equals(pwd)) {
+			throw new UserNotFoundException("Invalid Email or Password");
+        }
+		else {
+			int id_noob=sellerdao_obj.getSellerIdByEmail(email);
+			return new SellerDto(id_noob,sellerEntity_obj.getName(),sellerEntity_obj.getEmail(),sellerEntity_obj.getPhno(),sellerEntity_obj.getBus_type());
+		}
+	}
+}

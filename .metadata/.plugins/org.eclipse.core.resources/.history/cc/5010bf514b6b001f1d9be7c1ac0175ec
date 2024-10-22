@@ -1,0 +1,26 @@
+package service;
+import dao.BuyerDao;
+import dto.BuyerDto;
+import entity.BuyerEntity;
+public class BuyerService {
+	private BuyerDao buyerdao_obj=new BuyerDao();
+	public void register(BuyerEntity buyerEntity_obj) {
+		if (buyerEntity_obj.getName().isEmpty() || buyerEntity_obj.getEmail().isEmpty() || buyerEntity_obj.getPassword().isEmpty() || 
+				buyerEntity_obj.getPhno().isEmpty()  || buyerEntity_obj.getAddress().isEmpty()) {
+            System.out.println("All Fields are Required.....");
+        }
+		else {
+			buyerdao_obj.addBuyer(buyerEntity_obj);
+		}
+	}
+	public BuyerDto login(String email, String pwd) {
+		BuyerEntity buyerEntity_obj=buyerdao_obj.getBuyerByEmail(email);
+		if (buyerEntity_obj == null || !buyerEntity_obj.getPassword().equals(pwd)) {
+			System.out.println("Invalid Email or Password");
+        }
+		else {
+			int id_noob=buyerdao_obj.getBuyerIdByEmail(email);
+			return new BuyerDto(id_noob,buyerEntity_obj.getName(),buyerEntity_obj.getEmail(),buyerEntity_obj.getPhno(),buyerEntity_obj.getAddress());
+		}
+	}
+}

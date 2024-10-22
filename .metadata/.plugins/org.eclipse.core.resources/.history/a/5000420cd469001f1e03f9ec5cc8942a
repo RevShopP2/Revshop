@@ -1,0 +1,11 @@
+package util;
+
+import java.sql.*;
+public class DbConnect {
+	private static final String db_url = "jdbc:mysql://localhost:3306/ecommdb";
+    private static final String  uname= "root";
+    private static final String passwd= "Mahi2003@1234";
+	public static Connection getConnection() throws SQLException {
+	       return DriverManager.getConnection(db_url, uname, passwd);
+	}
+}

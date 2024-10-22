@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Custom CSS -->
+    <style>
+        body {
+    background-color: #f4f4f9;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    /* Adjust the padding-top to 0 or reduce it */
+}
+
+header {
+    display: flex;
+    flex-wrap: wrap; /* Allows items to wrap on smaller screens */
+    justify-content: space-between;
+    align-items: center;
+    background: rgb(238, 238, 213); /* Header background color */
+    padding: 10px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: fixed; /* Fix the header to the top */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+        margin: 0;
+}
+
+.container {
+    margin-top: 80px; /* Ensure this margin accommodates the header height */
+}
+        .card {
+    margin: 0; /* Set margin to 0 to remove any gaps */
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+        
+
+        .logo img {
+            width: 50px; /* Set the width of the image */
+            height: 50px; /* Set the height of the image */
+            border-radius: 50%; /* Makes the image circular */
+            object-fit: cover; /* Ensures the image covers the container */
+            margin-right: 5px;
+            margin-left: 5px; /* Space between the logo and other nav items */
+        }
+
+        a {
+            text-decoration: none; /* Removes the underline from links */
+            color: inherit; /* Ensures the text color of links matches the parent */
+        }
+        
+        .account-cart {
+            display: flex;
+            align-items: center;
+            gap: 5px; /* Reduced gap to 5px */
+        }
+
+        .account-icon, .orders-btn, .dashboard-btn {
+            background: #fbfbfb; /* Light grey background */
+            color: #000000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+        }
+
+        .account-icon:hover, .orders-btn:hover, .dashboard-btn:hover {
+            background: #865f1896; /* Darker grey on hover */
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-menu {
+            display: none; /* Keep it hidden by default */
+            position: absolute;
+            background-color: #fff;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Slight shadow for dropdown */
+            padding: 10px 0;
+            min-width: 200px;
+            right: 0;
+            z-index: 1;
+        }
+
+        .dropdown-menu li {
+            list-style: none;
+        }
+
+        .dropdown-menu li a {
+            color: #333;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .dropdown-menu li a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .container {
+            margin-top: 70px; /* Add margin to accommodate fixed header */
+            max-width: 800px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .dashboard-container {
+    text-align: center;
+    margin-top: 60px; /* Adjust as needed */
+    color: #333;
+}
+
+        .card-header {
+            background-color: rgb(255, 81, 0);
+            color: white;
+            font-weight: 600;
+            font-size: 1.5rem;
+            text-align: center;
+            padding: 20px;
+            border-bottom: none;
+        }
+
+        .card-body {
+            padding: 40px;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+
+        .input-group-text {
+            background-color: #e9ecef;
+            border: none;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid #ced4da;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .form-control:focus {
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+        }
+
+        .btn-custom {
+            background-color: goldenrod;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .btn-custom:hover {
+            background-color: rgb(255, 81, 0);
+        }
+
+        .image-preview {
+            max-width: 100%;
+            margin-top: 15px;
+            border-radius: 8px;
+            border: 2px solid #ced4da;
+        }
+
+        .footer {
+            background-color: rgb(255, 81, 0);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin-top: 20px;
+                padding: 0 15px;
+            }
+            .card-body {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a th:href="@{/seller/SellerDashboard}">
+                <img th:src="@{/images/revshop-logo.jpg}">
+            </a>
+        </div>
+        <div class="account-cart">
+			<button class="dashboard-btn">
+            <a th:href="@{/seller/SellerDashboard}">Dashboard</a>
+        </button>
+        <div class="header-buttons">
+        <div class="dropdown">
+            <button class="account-icon" onclick="toggleDropdown('profileDropdown')">
+                <span>
+                    <img src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/profile-52e0dc.svg" alt="Profile">
+                </span> 
+                Profile
+            </button>
+            <ul class="dropdown-menu" id="profileDropdown">
+                <li><a th:href="@{/seller/seller/sellerprofile}">My Profile</a></li>
+                <li><a th:href="@{/seller/manage}">Product Management</a></li>
+                <li><a th:href="@{/ecom/buyer/Logout}">Logout</a></li>
+            </ul>
+        </div>
+        
+        <div class="dropdown">
+            <button class="account-icon" onclick="toggleDropdown('ordersDropdown')">
+                Orders
+            </button>
+            <ul class="dropdown-menu" id="ordersDropdown">
+                <li><a th:href="@{/seller/seller/sellerprofile}">Received Orders</a></li>
+                <li><a th:href="@{/seller/manage}">Delivered Orders</a></li>
+            </ul>
+        </div>
+    </div>
+</header>
+    </header>
+
+    <video autoplay muted loop id="bgVideo">
+        <source src="/videos/vid.mov" type="video/mp4">
+        Your browser does not support HTML5 video.
+    </video>
+
+    <div class="container" style="margin-top:10px !important;">
+        <div class="card">
+            <div class="card-header">Add New Product</div>
+            <div class="card-body">
+                <form th:action="@{/products/save}" method="post" th:object="${product}">
+                    <!-- Hidden Seller ID -->
+                    <input type="hidden" th:name="sellerId" th:value="${seller}" />
+                    <!-- Hidden Category ID -->
+                    <input type="hidden" th:name="categoryId" th:value="${category.categoryId}" />
+                    <div class="mb-4">
+                        <label for="productName" class="form-label">Product Name:</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-tag"></i></span>
+                            <input type="text" id="productName" name="productName" class="form-control" required th:field="*{productName}">
+                        </div>
+                        <div class="valid-feedback">Looks good!</div>
+                        <div class="invalid-feedback">Please enter a valid product name (at least 3 characters).</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="productDescription" class="form-label">Description:</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                            <textarea id="productDescription" name="productDescription" class="form-control" rows="3" required th:field="*{productDescription}"></textarea>
+                        </div>
+                        <div class="valid-feedback">Looks good!</div>
+                        <div class="invalid-feedback">Description cannot be empty.</div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="price" class="form-label">Price:</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                <input type="number" id="price" name="price" class="form-control" step="0.01" required th:field="*{price}">
+                            </div>
+                            <div class="valid-feedback">Looks good!</div>
+                            <div class="invalid-feedback">Please enter a valid price (greater than 0).</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="discountPrice" class="form-label">Discount Price:</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-tags"></i></span>
+                                <input type="number" id="discountPrice" name="discountPrice" class="form-control" step="0.01" th:field="*{discountPrice}">
+                            </div>
+                            <div class="valid-feedback">Looks good!</div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="quantity" class="form-label">Quantity:</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-box"></i></span>
+                                <input type="number" id="quantity" name="quantity" class="form-control" required th:field="*{quantity}">
+                            </div>
+                            <div class="valid-feedback">Looks good!</div>
+                            <div class="invalid-feedback">Please enter a valid quantity (greater than 0).</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="threshold" class="form-label">Threshold Quantity:</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-exclamation-triangle"></i></span>
+                                <input type="number" id="threshold" name="threshold" class="form-control" required th:field="*{threshold}">
+                            </div>
+                            <div class="valid-feedback">Looks good!</div>
+                            <div class="invalid-feedback">Threshold quantity must be greater than 0.</div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="image" class="form-label">Image URL:</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-link"></i></span>
+                            <input type="text" id="image" name="image" class="form-control" required th:field="*{image}">
+                        </div>
+                        <img id="imagePreview" class="image-preview mt-3" alt="Image Preview" style="display:none;">
+                        <div class="valid-feedback">Image URL added!</div>
+                        <div class="invalid-feedback">Please enter a valid image URL.</div>
+                    </div>
+
+                    <button type="submit" class="btn btn-custom">Add Product</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        &copy; 2024 RevShop. All rights reserved.
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+	    let openDropdown = null; // Variable to keep track of the currently open dropdown
+	
+		function toggleDropdown(dropdownId) {
+		    const dropdownMenu = document.getElementById(dropdownId);
+		    
+		    // Close the currently open dropdown if it's not the one being clicked
+		    if (openDropdown && openDropdown !== dropdownMenu) {
+		        openDropdown.style.display = 'none'; // Close the previous dropdown
+		    }
+	
+		    // Toggle the clicked dropdown
+		    dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+	
+		    // Update the currently open dropdown
+		    openDropdown = dropdownMenu.style.display === 'block' ? dropdownMenu : null; 
+		}
+	
+		// Optional: Close dropdown when clicking outside
+		window.onclick = function(event) {
+		    if (!event.target.matches('.account-icon')) {
+		        const dropdowns = document.getElementsByClassName("dropdown-menu");
+		        for (let i = 0; i < dropdowns.length; i++) {
+		            const openDropdown = dropdowns[i];
+		            if (openDropdown.style.display === 'block') {
+		                openDropdown.style.display = 'none'; // Close the dropdown
+		            }
+		        }
+		        openDropdown = null; // Reset the currently open dropdown
+		    }
+		}
+        // Form validation
+        document.getElementById('addProductForm').addEventListener('input', function (event) {
+            const target = event.target;
+            if (target.validity.valid) {
+                target.classList.remove('is-invalid');
+                target.classList.add('is-valid');
+                target.nextElementSibling.style.display = 'block'; // Show valid feedback
+                if (target.nextElementSibling.nextElementSibling) {
+                    target.nextElementSibling.nextElementSibling.style.display = 'none'; // Hide invalid feedback
+                }
+            } else {
+                target.classList.remove('is-valid');
+                target.classList.add('is-invalid');
+                target.nextElementSibling.style.display = 'none'; // Hide valid feedback
+                if (target.nextElementSibling.nextElementSibling) {
+                    target.nextElementSibling.nextElementSibling.style.display = 'block'; // Show invalid feedback
+                }
+            }
+        });
+    </script>
+</body>
+</html>

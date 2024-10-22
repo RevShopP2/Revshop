@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RevShop</title>
+
+<link
+	href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<style>
+
+/* General Styles */
+body {
+	margin: 0;
+	padding: 0;
+	background-color: #f4f4f4; /* Light grey background */
+	padding-top: 60px;
+	font-family: 'Poppins', sans-serif;
+}
+
+header {
+	display: flex;
+	flex-wrap: wrap; /* Allows items to wrap on smaller screens */
+	justify-content: space-between;
+	align-items: center;
+	background: rgb(238, 238, 213); /* Header background color */
+	padding: 10px 20px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	position: fixed; /* Fix the header to the top */
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 1000;
+}
+
+.logo img {
+	width: 50px; /* Set the width of the image */
+	height: 50px; /* Set the height of the image */
+	border-radius: 50%; /* Makes the image circular */
+	object-fit: cover; /* Ensures the image covers the container */
+	margin-right: 5px;
+	margin-left: 30px /* Space between the logo and other nav items */
+}
+
+/* Input search box styling */
+input[type="text"] {
+	border: 2px solid #ddd; /* Border color */
+	border-radius: 50px; /* Circular border */
+	padding: 10px 20px; /* Padding inside the input */
+	font-size: 16px; /* Font size for text inside input */
+	outline: none; /* Removes the default outline */
+	width: 680px; /* Adjust width of the search box */
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+input[type="text"]::placeholder {
+	color: #aaa; /* Color for the placeholder text */
+}
+
+/* Navigation */
+nav ul {
+	list-style: none;
+	display: flex;
+	gap: 15px;
+}
+
+nav ul li {
+	color: #fff; /* White text for navigation links */
+}
+
+/* Buttons */
+.account-icon, .cart-icon {
+	background: #fbfbfb; /* Light grey background */
+	color: #000000;
+	border: none;
+	padding: 10px 20px;
+	border-radius: 20px;
+	cursor: pointer;
+	transition: background 0.3s;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-size: 14px;
+}
+
+.account-icon:hover, .cart-icon:hover {
+	background: #865f1896; /* Darker grey on hover */
+}
+
+.cart-icon img, .account-icon img {
+	width: 20px;
+	height: 20px;
+}
+
+/* Dropdown Menu Styling */
+.dropdown {
+	position: relative;
+	display: inline-block;
+}
+
+.dropdown-menu {
+	display: none;
+	position: absolute;
+	background-color: #fff;
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+	/* Slight shadow for dropdown */
+	padding: 10px 0;
+	min-width: 200px;
+	right: 0;
+	z-index: 1;
+}
+
+.dropdown-menu li {
+	list-style: none;
+}
+
+.dropdown-menu li a {
+	color: #333;
+	padding: 10px 20px;
+	text-decoration: none;
+	display: block;
+	font-size: 14px;
+	transition: background-color 0.2s;
+}
+
+.dropdown-menu li a:hover {
+	background-color: #f1f1f1;
+}
+
+/* Show dropdown on hover */
+.dropdown:hover .dropdown-menu {
+	display: block;
+}
+
+/* Profile and Cart buttons container */
+.account-cart {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+/* Hover effect for profile and cart */
+.account-cart button:hover {
+    background-color: #f0f0f0; 
+    transition: background-color 0.3s ease;
+}
+
+/* Banner */
+.banner {
+	margin: 20px 0;
+}
+
+/* Carousel */
+.carousel-item img {
+	height: 400px; /* Fixed height for carousel images */
+	object-fit: cover;
+}
+
+.categories {
+	padding: 20px;
+	background: #ffffff; /* White background for categories */
+}
+
+.categories h2 {
+	text-align: center;
+	margin-bottom: 20px;
+	font-family: 'Poppins', sans-serif;
+}
+
+.category-grid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+	justify-content: center;
+}
+
+.category {
+	background: #fff;
+	border: 1px solid #ddd; /* Light grey border */
+	border-radius: 8px; /* Rounded corners */
+	width: 200px; /* Fixed width for category cards */
+	padding: 10px; /* Padding inside category cards */
+	text-align: center;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Box shadow for depth */
+	transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+.category img {
+	width: 170px; /* Set a fixed width */
+	height: 150px; /* Set a fixed height */
+	object-fit: cover; /* Maintain aspect ratio and cover the area */
+	border-radius: 8px; /* Same border radius as card */
+	transition: transform 0.3s, background 0.3s;
+}
+
+.category:hover {
+	transform: scale(1.05); /* Lifted on hover */
+	background: #f9f9f9; /* Slightly lighter background on hover */
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	/* Enhanced shadow on hover */
+}
+
+/* Footer */
+footer {
+	background-color: #1a1a1a;
+	color: #fff;
+	display: flex;
+	justify-content: space-between;
+	padding: 20px;
+}
+
+.footer-section {
+	width: 30%;
+}
+
+.footer-section h3 {
+	font-size: 1.2rem;
+	margin-bottom: 10px;
+}
+
+.footer-section address, .footer-section p {
+	font-size: 0.9rem;
+	line-height: 1.6;
+}
+
+.footer-social {
+	width: 10%;
+}
+
+.footer-social a {
+	margin-right: 15px;
+	text-decoration: none;
+	color: #ffffff;
+}
+
+.footer-social img {
+	width: 24px;
+	height: 24px;
+	filter: invert(1); /* Makes the icon white on dark background */
+}
+
+.footer a {
+	color: #4CAF50;
+}
+
+.footer a:hover {
+	text-decoration: underline;
+}
+
+/* Info Boxes */
+.info-boxes {
+	display: flex;
+	justify-content: space-around;
+	margin: 20px;
+}
+
+.info-box {
+	background-color: #ffffff;
+	border-radius: 12px;
+	width: 200px;
+	padding: 20px;
+	text-align: center;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	transition: transform 0.2s;
+}
+
+.info-box:hover {
+	transform: translateY(-5px);
+}
+
+.icon {
+	font-size: 40px;
+	margin-bottom: 10px;
+}
+
+.image-button {
+	background-color: transparent; /* Makes button background transparent */
+	border: none; /* Removes any default button border */
+	cursor: pointer; /* Changes cursor to pointer when hovering */
+	display: inline-block; /* Align buttons inline */
+	padding: 0; /* Remove default padding */
+	box-sizing: border-box;
+	/* Include padding and border in element's total width and height */
+}
+
+/* Image inside the button */
+.image-button img {
+	border-radius: 15px; /* Rounds the corners */
+	border: 2px solid #000; /* Adds a solid black border */
+	width: 100%; /* Ensure the image fills the button */
+	height: auto; /* Maintain aspect ratio */
+	display: block; /* Removes bottom space caused by inline images */
+}
+
+.image-button {
+	width: auto; /* Default width for larger screens */
+	height: auto; /* Height adjusts automatically */
+}
+button {
+	background-color: #007bff; /* Button background color */
+	color: white; /* Button text color */
+	border: none; /* Remove border */
+	border-radius: 50px; /* Circular border */
+	padding: 10px 20px; /* Padding inside the button */
+	font-size: 16px; /* Font size for button text */
+	cursor: pointer; /* Change cursor on hover */
+	transition: background-color 0.3s; /* Smooth background transition */
+}
+/* Product Cards */
+.product-grid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 15px;
+	justify-content: center;
+}
+
+.product-card {
+	background: #fff;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	width: 200px; /* Fixed width for product cards */
+	padding: 10px;
+	text-align: center;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	overflow: hidden;
+	opacity: 0;
+	transform: translateY(50px);
+	transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+.product-card img {
+	width: 100%;
+	object-fit: cover;
+	transition: transform 0.3s, background 0.3s;
+}
+
+.product-card p {
+	margin: 10px 0 0;
+}
+
+.product-card.visible {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+.product-card:hover {
+	transform: scale(1.05); /* Slightly increase size on hover */
+}
+
+/* Responsive Adjustments */
+@media ( max-width : 768px) {
+	header {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+	input[type="text"] {
+		width: 100%;
+		margin-bottom: 10px;
+	}
+	.account-cart {
+		margin-top: 10px;
+	}
+	.category-grid, .product-grid {
+		flex-direction: column;
+		align-items: center;
+	}
+}
+
+/* Responsive Adjustments */
+@media ( max-width : 768px) {
+	.scrolling-animation {
+		transition: transform 0.4s ease;
+		/* Slower transition for smaller screens */
+	}
+	.image-button {
+		width: auto; /* Smaller width for tablets */
+	}
+}
+
+@media ( max-width : 480px) {
+	.scrolling-animation {
+		transform: translateY(50px); /* Shorter translate distance */
+	}
+	.image-button {
+		width: auto; /* Smaller width for mobile devices */
+	}
+}
+
+#sellerreg, #sellerreg:hover {
+	text-decoration: none;
+	color: black;
+}
+
+a{
+	text-decoration:none;
+	color:black;
+}
+</style>
+</head>
+<body>
+	<header>
+		<div class="logo">
+			<a th:href="@{/ecom/buyer/cancel}"> <img
+				th:src="@{/images/revshop-logo.jpg}">
+			</a>
+		</div>
+
+		<div class="search-container" style="margin-left: -20px;">
+			<form action="/products/search/buyerdashboard" method="post">
+				<input type="text" name="keyword" placeholder="Search for products"
+					th:value="${keyword}" id="search-input"
+					style="border-radius: 100px;"> <span id="mic-btn"
+					title="Click to speak" aria-label="Microphone"><svg
+						xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+						fill="currentColor" width="24px" height="24px">
+  <path
+							d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5.002 5.002 0 0 1-4 4.9V19h3a1 1 0 1 1 0 2h-8a1 1 0 1 1 0-2h3v-3.1a5.002 5.002 0 0 1-4-4.9 1 1 0 0 1 2 0 3 3 0 0 0 6 0 1 1 0 0 1 2 0z" />
+</svg> </span>
+				<button type="submit" id="search-btn" style="border-radius: 100px;">Search</button>
+			</form>
+		</div>
+
+		<div class="account-cart">
+			<div class="dropdown">
+				<button class="account-icon">
+					<span> <img
+						src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/profile-52e0dc.svg"
+						alt="profile">
+					</span> Profile
+				</button>
+				<ul class="dropdown-menu">
+					<li><a th:href="@{/ecom/buyer/buyerprofile}">My Profile</a></li>
+					<li><a th:href="@{/order/buyer}">Orders</a></li>
+					<li><a th:href="@{/wish/view}">Wishlist</a></li>
+
+					<li><a th:href="@{/ecom/buyer/Logout}">Logout</a></li>
+				</ul>
+			</div>
+			<a th:href="@{/cart/view}">
+				<button class="cart-icon">
+					<img
+						src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/header_cart-eed150.svg"
+						alt="Cart"> <span>Cart</span>
+				</button>
+			</a> <a th:href="@{/seller/buyer/sellerRegistration}" id="sellerreg"><button
+					class="account-icon">
+					<img
+						src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/Store-9eeae2.svg"
+						alt=" Become a Seller"> <span> Seller</span>
+				</button></a>
+			<button class="account-icon">
+				<img
+					src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/helpcenter-7d90c0.svg">
+			</button>
+		</div>
+	</header>
+
+	<main>
+		<section class="banner">
+			<div id="carouselExampleIndicators" class="carousel slide"
+				data-bs-ride="carousel">
+				<div class="carousel-inner">
+					<div class="carousel-item active">
+
+						<a th:href="@{/products/category/26}"><img
+							src="https://cmsimages.shoppersstop.com/main_banner_web_skechers_Reebok_4b074b3488/main_banner_web_skechers_Reebok_4b074b3488.png"
+							class="d-block w-100" alt="Deals"></a>
+					</div>
+					<div class="carousel-item">
+						<a th:href="@{/products/category/13}"><img
+							src="https://cmsimages.shoppersstop.com/main_strapi_web_ff1a52cb76/main_strapi_web_ff1a52cb76.png"
+							class="d-block w-100" alt="Fashion"></a>
+					</div>
+					<div class="carousel-item">
+						<a th:href="@{/products/category/25}"> <img
+							src="https://cmsimages.shoppersstop.com/main_banner_web_Fossil_michael_kors_and_more_a12056fe6e/main_banner_web_Fossil_michael_kors_and_more_a12056fe6e.png"
+							class="d-block w-100" alt="Watches">
+						</a>
+					</div>
+				</div>
+				<button class="carousel-control-prev" type="button"
+					data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+					<span class="visually-hidden">Previous</span>
+				</button>
+				<button class="carousel-control-next" type="button"
+					data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+					<span class="carousel-control-next-icon" aria-hidden="true"></span>
+					<span class="visually-hidden">Next</span>
+				</button>
+			</div>
+		</section>
+
+
+		<section class="categories">
+			<h2>Popular Categories</h2>
+			<div class="category-grid">
+				<div class="category">
+					<a th:href="@{/products/category/1}"> <img
+						src="https://cdn.pixabay.com/photo/2020/11/23/06/21/television-5768804_640.png"
+						alt="tv">
+					</a>
+				</div>
+				<div class="category">
+					<a th:href="@{/products/category/13}"> <img
+						src="https://5.imimg.com/data5/MU/YU/OX/SELLER-86913833/rbvagfx2ckqaipnfaakcuzvvbko836-jpg.jpg "
+						alt="Tshite"></a>
+				</div>
+				<div class="category">
+					<a th:href="@{/products/category/9}"> <img
+						src="https://media3.bsh-group.com/Images/450x/19425132_Siemens_Home_Appliances_Brand_Reshape_Laundry_Care_Washin_Machines_Mobile_Stage_9_16.jpg"
+						alt="washing meachin"></a>
+				</div>
+				<div class="category">
+					<a th:href="@{/products/category/11}"> <img
+						src="https://www.siatex.com/wp-content/uploads/2024/02/Hoodies-Manufacturer-in-Bangladesh-550x550.jpeg.webp "
+						alt="hoddies">
+					</a>
+				</div>
+				<div class="category">
+					<a th:href="@{/products/category/20}"> <img
+						src="https://www.trustedreviews.com/wp-content/uploads/sites/54/2022/07/Canon_PIXMA_G650_front_side-scaled.jpg"
+						alt="pinters"></a>
+				</div>
+				<div class="category">
+					<a th:href="@{/products/category/8}"><img
+						src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRla8erNGY2vUNsn9XyHiRQ0ri686Y3BMXkXA&s"
+						alt="Books"></a>
+				</div>
+				<div class="category">
+					<a th:href="@{/products/category/15}"> <img
+						src="https://media.cnn.com/api/v1/images/stellar/prod/i-stock-1287493837-1.jpg?q=h_1194,w_2121,x_0,y_0"
+						alt="video games"></a>
+				</div>
+				<div class="category">
+					<a th:href="@{/products/category/2}"><img
+						src="https://www.cnet.com/a/img/resize/be75693d76fa05d221c69eab339bc6b7165d9ae3/hub/2023/07/05/dbbaffb7-80be-44be-9d79-c88ac856d36a/5g6a9290.jpg?auto=webp&fit=crop&height=675&width=1200"
+						alt="smartphones"></a>
+				</div>
+				<div class="category">
+					<a th:href="@{/products/category/14}"> <img
+						src="/images/furniture.jpg" alt="Furniture"></a>
+				</div>
+			</div>
+		</section>
+
+
+
+		<center>
+
+			<a th:href="@{/products/category/24}" class="image-button"> <img
+				src="https://motorolain.vtexassets.com/assets/vtex.file-manager-graphql/images/7d213632-b607-498c-8d7e-75d07327b353___363c993e847b1c7eb050da30dcddbb6c.jpg  "
+				alt="Button Image 1">
+			</a>
+
+		</center>
+
+
+		<section class="featured-products">
+			<h2 class="animated-element" style="margin-left:40%">Featured Products</h2>
+			<div class="product-grid">
+				<div class="product-card">
+					<a th:href="@{/products/category/2}"> <img
+						src="https://5.imimg.com/data5/SELLER/Default/2024/5/420464956/TG/PX/IW/222515528/apple-iphone-15-128-gb-pink-250x250.jpg"
+						alt="Smartphones"></a>
+					<p>Smartphones</p>
+				</div>
+				<div class="product-card">
+					<a th:href="@{/products/category/3}"> <img
+						src="https://static-ecapac.acer.com/media/wysiwyg/Desktop-Banner_640x720_2_1.jpg"
+						alt="Laptops">
+					</a>
+					<p>Laptops</p>
+				</div>
+				<div class="product-card">
+					<a th:href="@{/products/category/4}"> <img
+						src="https://5.imimg.com/data5/SELLER/Default/2023/10/354886967/TI/DF/AE/100983625/tshirt-maroon-png-500x500.png"
+						alt="T-shirts"></a>
+					<p>T-shirts</p>
+				</div>
+
+				<div class="product-card">
+					<a th:href="@{/products/category/5}"> <img
+						src="https://static.wixstatic.com/media/8f92dc_7034699e0d1b4c8e847f50101611b90f~mv2.jpg/v1/fill/w_320,h_320,q_90/8f92dc_7034699e0d1b4c8e847f50101611b90f~mv2.jpg"
+						alt="Buds">
+					</a>
+					<p>Ear Buds</p>
+				</div>
+
+				<div class="product-card">
+					<a th:href="@{/products/category/6}"> <img
+						src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRb-whPXEqeo89Ogjs6UM35Q1mKsh1oUnntOQ&s"
+						alt="Camera">
+					</a>
+					<p>Camera</p>
+				</div>
+
+
+
+
+				<div class="product-card">
+					<a th:href="@{/products/category/7}"> <img
+						src="https://www.cnet.com/a/img/resize/af7a1129318b00fa6386dc1731cd14b09dc21eb8/hub/2023/10/02/a2702f0c-5206-4306-8fd2-ee703fe93259/pyxel.jpg?auto=webp&fit=crop&height=1200&width=1200"
+						alt="Toys"></a>
+					<p>Toys</p>
+				</div>
+
+
+
+			</div>
+
+		</section>
+
+		<br>
+		<center>
+			<a th:href="@{/products/category/1}" class="image-button"> <img
+				src="https://motorolain.vtexassets.com/assets/vtex.file-manager-graphql/images/766a3297-c51a-4485-8f49-8a473cf4c7d6___a13a3612b4f84a13e7fa4e52c1d17230.jpg "
+				alt="Button Image 2">
+			</a>
+			</div>
+
+		</center>
+		<div class="info-boxes">
+			<div class="info-box">
+				<div class="icon">&#x1F4F1;</div>
+				<h3>Easy Exchange</h3>
+				<p>Get ₹4000.00 – ₹67500.00 in credit towards a new one.</p>
+			</div>
+			<div class="info-box">
+				<div class="icon">&#x1F34E;</div>
+				<h3>Best Deals</h3>
+				<p>Most Trusted Indian Website.</p>
+			</div>
+			<div class="info-box">
+				<div class="icon">&#x1F600;</div>
+				<h3>Make them yours</h3>
+				<p>Engrave a mix of emoji, names, and numbers for free.</p>
+			</div>
+			<div class="info-box">
+				<div class="icon">&#x1F69A;</div>
+				<h3>Free delivery or easy pickup</h3>
+
+			</div>
+		</div>
+	</main>
+
+	<footer class="footer">
+		<div class="footer-section">
+			<h3>Contact Us:</h3>
+			<address>
+				Revature <br> Workafella, 12th floor <br> Tech Park Area,<br>
+				Chennai,<br> TN, India<br>
+			</address>
+
+		</div>
+
+
+		<div class="footer-section">
+			<p>
+				Email: <a href="mailto:revature99@gmail.com">revature99@gmail.com</a>
+			</p>
+			<p>
+				Phone: <a href="tel:+919876543210">+919876543210</a>
+			</p>
+			<p>© 2024 All rights are reserved , RevShop.</p>
+		</div>
+
+		<div class="footer-social-img">
+			<h3>Follow Us</h3>
+			<a href="#" aria-label="Facebook"><img
+				src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjUiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNSAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyLjkzMzEgMjFDMTcuOTAzNyAyMSAyMS45MzMxIDE2Ljk3MDYgMjEuOTMzMSAxMkMyMS45MzMxIDcuMDI5NDQgMTcuOTAzNyAzIDEyLjkzMzEgM0M3Ljk2MjU0IDMgMy45MzMxMSA3LjAyOTQ0IDMuOTMzMTEgMTJDMy45MzMxMSAxNi45NzA2IDcuOTYyNTQgMjEgMTIuOTMzMSAyMVoiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPHBhdGggZD0iTTE2LjY4MzEgOC4yNUgxNS4xODMxQzE0LjU4NjQgOC4yNSAxNC4wMTQxIDguNDg3MDUgMTMuNTkyMSA4LjkwOTAxQzEzLjE3MDIgOS4zMzA5NyAxMi45MzMxIDkuOTAzMjYgMTIuOTMzMSAxMC41VjIxIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CjxwYXRoIGQ9Ik05LjkzMzExIDEzLjVIMTUuOTMzMSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K"
+				alt="Facebook"></a> <a href="#" aria-label="Twitter"><img
+				src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzE4M18yMCkiPgo8cGF0aCBkPSJNMTMuNTQzNiAxMC42MTc5TDIwLjA5NzEgM0gxOC41NDQxTDEyLjg1MzcgOS42MTQ0OEw4LjMwODg3IDNIMy4wNjY4OUw5LjkzOTY0IDEzLjAwMjNMMy4wNjY4OSAyMC45OTA4SDQuNjE5OTRMMTAuNjI5MSAxNC4wMDU2TDE1LjQyODggMjAuOTkwOEgyMC42NzA4TDEzLjU0MzIgMTAuNjE3OUgxMy41NDM2Wk0xMS40MTY1IDEzLjA5MDRMMTAuNzIwMiAxMi4wOTQ0TDUuMTc5NTMgNC4xNjkxMUg3LjU2NDkxTDEyLjAzNjMgMTAuNTY1MUwxMi43MzI2IDExLjU2MTFMMTguNTQ0OCAxOS44NzQ4SDE2LjE1OTVMMTEuNDE2NSAxMy4wOTA4VjEzLjA5MDRaIiBmaWxsPSJ3aGl0ZSIvPgo8L2c+CjxkZWZzPgo8Y2xpcFBhdGggaWQ9ImNsaXAwXzE4M18yMCI+CjxyZWN0IHg9IjMuMDY2ODkiIHk9IjMiIHdpZHRoPSIxNy42MDM5IiBoZWlnaHQ9IjE4IiByeD0iMC4yIiBmaWxsPSJ3aGl0ZSIvPgo8L2NsaXBQYXRoPgo8L2RlZnM+Cjwvc3ZnPgo="
+				alt="Twitter"></a> <a href="#" aria-label="YouTube"><img
+				src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/YoutubeLogo-8425c4.svg"
+				alt="YouTube"></a> <br> <br>
+
+		</div>
+	</footer>
+
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+	<script src="https://kit.fontawesome.com/b71be40703.js"
+		crossorigin="anonymous"></script>
+	<script>
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize Bootstrap Carousel if present
+    const myCarousel = document.querySelector('#carouselExampleIndicators');
+    if (myCarousel) {
+        new bootstrap.Carousel(myCarousel, {
+            interval: 2000,
+            wrap: true
+        });
+    }
+    // Intersection Observer for product cards and animated elements
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            } else {
+                entry.target.classList.remove('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    // Observe product cards
+    document.querySelectorAll('.product-card').forEach(card => {
+        observer.observe(card);
+    });
+
+    // Observe animated elements
+    document.querySelectorAll('.animated-element').forEach(element => {
+        observer.observe(element);
+    });
+
+    // Scrolling animation
+    const elements = document.querySelectorAll('.scrolling-animation');
+
+    const onScroll = () => {
+        const viewportHeight = window.innerHeight;
+
+        elements.forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < viewportHeight - 100) {
+                el.classList.add('scroll-in');
+                el.classList.remove('scroll-out');
+            } else {
+                el.classList.remove('scroll-in');
+                el.classList.add('scroll-out');
+            }
+        });
+    };
+
+    window.addEventListener('scroll', onScroll);
+    onScroll(); // Initial check
+});
+
+document.querySelectorAll('.bounce-in').forEach(element => {
+    observer.observe(element);
+});
+
+
+    </script>
+    		<script>
+    const micBtn = document.getElementById('mic-btn');
+    const searchInput = document.getElementById('search-input');
+    const searchBtn = document.getElementById('search-btn');
+
+    if ('webkitSpeechRecognition' in window) {
+        const recognition = new webkitSpeechRecognition();
+        recognition.continuous = false; // Stops automatically after speaking
+        recognition.interimResults = false; // Only final results are needed
+        recognition.lang = 'en-US'; // Set language
+
+        micBtn.addEventListener('click', () => {
+            recognition.start(); // Start voice recognition
+        });
+
+        recognition.onresult = (event) => {
+            let transcript = event.results[0][0].transcript.trim(); // Trim whitespace
+            if (transcript.endsWith('.')) {
+                transcript = transcript.slice(0, -1); // Remove the trailing dot
+            }
+            searchInput.value = transcript; // Set input value to voice transcript
+            searchBtn.click(); // Automatically trigger search button click
+        };
+
+        recognition.onerror = (event) => {
+            console.error('Error occurred in recognition: ', event.error);
+        };
+    } else {
+        alert("Speech Recognition not supported on this browser. Try Chrome.");
+    }
+</script>
+</body>
+</html>

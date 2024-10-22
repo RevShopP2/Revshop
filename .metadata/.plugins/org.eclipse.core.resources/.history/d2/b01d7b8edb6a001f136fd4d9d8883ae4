@@ -1,0 +1,6 @@
+package entity;
+
+public class SellerEntity {
+	private String name;
+	
+}

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Order Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        .success-message {
+            color: green;
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .order-summary, .order-details {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-item {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        .order-item p {
+            margin: 5px 0;
+        }
+
+        .total-price {
+            font-weight: bold;
+            font-size: 18px;
+            text-align: right; /* Align the total price to the right */
+            margin-top: 20px;
+        }
+
+        .view-orders-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color:red;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .view-orders-btn:hover {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Order Confirmation</h2>
+
+<div class="success-message">
+    <p>Thank you for your order! Your order has been successfully placed.</p>
+</div>
+
+<h3>Order Summary</h3>
+<div class="order-summary">
+    <ul>
+        <li th:each="item : ${orderSummary}">
+            <div class="order-item">
+                <p><strong>Product:</strong> <span th:text="${itemproductName}"></span></p>
+                <p><strong>Quantity:</strong> <span th:text="${item.quantity}"></span></p>
+                <p><strong>Price per item:</strong> $<span th:text="${item.price}"></span></p>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<p class="total-price">Total Price: $<span th:text="${totalPrice}"></span></p>
+
+<h3>Shipping Information</h3>
+<div class="order-details">
+    <p><strong>City:</strong> <span th:text="${buyer.city}"></span></p>
+    <p><strong>Postal Code:</strong> <span th:text="${buyer.postalCode}"></span></p>
+    <p><strong>State:</strong> <span th:text="${buyer.state}"></span></p>
+    <p><strong>Country:</strong> <span th:text="${buyer.country}"></span></p>
+</div>
+
+<h3>Payment Method</h3>
+<div class="order-details">
+    <p><strong>Payment Method:</strong> <span th:text="${paymentMethod}"></span></p>
+</div>
+
+<a th:href="@{/ecom/buyer/cancel}" class="view-orders-btn">cancel</a>
+
+</body>
+</html>

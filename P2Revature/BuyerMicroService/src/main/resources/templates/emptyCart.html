@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* General Styles */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4; /* Light grey background */
+      font-family: 'Poppins', sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Navbar styles */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgb(238, 238, 213); /* Header background */
+      padding: 10px 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .logo img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 10px;
+    }
+
+    .account-icon {
+      background: #fbfbfb; /* Light grey background */
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin-right: 8px;
+    }
+
+    .account-icon:hover {
+      background: #865f1896; /* Darker grey on hover */
+    }
+
+    /* Center container styles */
+    .main-container {
+      background-color: white;
+      padding: 50px;
+      margin: 50px auto;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      max-width: 1000px;
+      width: 100%;
+      margin-top: 150px; /* Push the container down */
+      margin-bottom: auto;
+    }
+
+    .main-container img {
+      width: 300px;
+      height: auto;
+      max-width: 100%;
+    }
+
+    /* Footer styles */
+    footer {
+      background-color: #f0f0f0;
+      color: #777;
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 20px;
+      font-size: 14px;
+      width: 100%;
+      position: relative;
+      bottom: 0;
+      left: 0;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 15px;
+    }
+
+    .footer-links a {
+      color: #2874f0;
+      text-decoration: none;
+    }
+
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-right {
+      white-space: nowrap;
+      text-align: right;
+    }
+
+    @media (max-width: 767px) {
+      .main-container {
+        padding: 30px;
+        max-width: 95%;
+      }
+
+      footer {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .footer-right {
+        margin-top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+			<a th:href="@{/ecom/welcomepage}"> <img
+				th:src="@{/images/revshop-logo.jpg}">
+			</a>
+		</div>
+    <a th:href="@{/ecom/LoginPage}">
+      <button class="account-icon">Login</button>
+    </a>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container main-container">
+    <img th:src="@{/images/missing_cart.png}" alt="Missing Items">
+    <h2>Missing Cart Items?</h2>
+    <p>Login to see the items you added previously</p>
+    <a th:href="@{/ecom/welcomepage}">
+      <button class="btn btn-warning">Back</button>
+    </a>
+  </div>
+  <!-- Footer -->
+  <footer>
+    <div class="footer-links">
+      <a th:href="@{/returns-policy}">Returns Policy</a>
+      <a th:href="@{/terms-of-use}">Terms of Use</a>
+      <a th:href="@{/security}">Security</a>
+      <a th:href="@{/privacy}">Privacy</a>
+      <a th:href="@{/infringement}">Infringement</a>
+      <span>© 2023-2024 Revshop.com</span>
+    </div>
+    <div class="footer-right">
+      Need help? Visit the <a th:href="@{/help-center}">Help Center</a> or <a th:href="@{/contact-us}">Contact Us</a>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

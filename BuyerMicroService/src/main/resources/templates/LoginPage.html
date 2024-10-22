@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f3f6;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            display: flex;
+            height: 80vh; 
+            width: 70vw;
+        }
+        .left-section {
+            color: purple;
+            padding: 40px;
+            width: 50%; 
+            height: 100%; 
+            border-radius: 10px;
+        }
+        
+        .left-section h1 {
+            font-size: 2.5em;
+            margin: 0;
+            text-align: center;
+        }
+        
+        .left-section img {
+            width: 105%;
+            height: 380px;
+            margin-top: 5px;
+        }
+        
+        .right-section {
+            width: 50%; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 50px;
+        }
+
+        .login-box {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            height: 95%;
+        }
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+        .tab {
+            flex: 1;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 1.2em;
+            background-color: #d0d0d0;
+            transition: background-color 0.3s ease;
+            text-align: center;
+            border: 1px solid white;
+            border-radius: 20px;
+        }
+        .tab.active {
+            background-color: #111213;
+            color: white;
+        }
+        .tab:hover {
+            background-color: #6e6e6e;
+            color: white;
+        }
+        .login-box h2 {
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        .input-group {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .input-group input {
+            border: none;
+            border-bottom: 2px solid #d0d0d0;
+            padding: 10px;
+            font-size: 16px;
+            flex: 1;
+            outline: none;
+        }
+
+        .input-group select {
+            border: none;
+            background-color: transparent;
+            font-size: 16px;
+            padding: 10px 0;
+            margin-right: 5px;
+            border-bottom: 2px solid #d0d0d0;
+        }
+        .toggle-link {
+            color: #2874f0;
+            cursor: pointer;
+            display: block;
+            text-align: right;
+        }
+
+        .btn {
+            background-color: goldenrod;
+            color: white;
+            padding: 10px;
+            border: 1px solid;
+            width: 100%;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            border-radius: 20px;
+        }
+
+        .btn:hover {
+            background-color: rgb(164, 119, 5);
+        }
+        .anchor-tags {
+            margin-top: 10px;
+            margin-left: 18%;
+        }
+        .back-btn {
+    		background-color: goldenrod;
+    		color: white; 
+    		padding: 10px 20px; 
+    		border: none; 
+    		border-radius: 20px; 
+    		font-size: 16px; 
+    		cursor: pointer; 
+   		 	margin-top: 20px; 
+    		transition: background-color 0.3s ease; 
+		}
+		.back-btn:hover {
+    		background-color: darkgoldenrod; 
+    		transform: scale(1.05);
+    		box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+		}
+        .a-back-btn{
+        	color:white;
+        	text-decoration:none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-section" Style="margin-right: 20px !important;">
+            
+            <img src="https://www.revshop.com/images/main-logo.svg"  alt="Login illustration">
+            <button class="back-btn" type="button"><a th:href="@{/ecom/welcomepage}" class="a-back-btn">Back to Home</a></button>
+        </div>
+        <div class="right-section">
+            <div class="login-box">
+                <!-- Added default form action for initial load -->
+                <form th:action="@{/ecom/buyer/handleLogin}" method="post" id="identity">
+                    <div class="tabs">
+                        <div id="buyerTab" class="tab active" onclick="switchTab('buyer')">Buyer</div>
+                        <div id="sellerTab" class="tab" onclick="switchTab('seller')">Seller</div>
+                    </div>
+
+                    <h3 id="loginTitle">Enter Email/Mobile number</h3>
+                    <span id="toggleText" class="toggle-link" onclick="toggleInput()">Use Email ID</span>
+                    
+                    <!-- Phone number input -->
+                    <div class="input-group" id="phoneInput">
+                        <select>
+                            <option value="+91">+91</option>
+                        </select>
+                        <input type="text" name="mobileNumber" id="mobileNumber" placeholder="Mobile Number" maxlength="10" required />
+                    </div>
+
+                    <!-- Email input -->
+                    <div class="input-group" id="emailInput" style="display: none;">
+                        <input type="email" name="email" id="email" placeholder="Email ID" disabled required />
+                    </div>
+
+                    <!-- Password input -->
+                    <div class="input-group">
+                        <input type="password" name="password" placeholder="Enter Password" required />
+                    </div>
+
+                    <div class="input-group">
+                        <a th:href="@{/ecom/buyer/ForgotPassword}" id="forgotLink">Forgot Password?</a>
+                    </div>
+
+                    <!-- Login button -->
+                    <button class="btn" id="loginButton">Login</button>
+
+                    <!-- Registration link -->
+                    <div class="anchor-tags">
+                        <a th:href="@{/ecom/buyer/buyerRegistration}" id="registrationLink">Don't have an account? Register</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+	<div th:if="${errorMessage}">
+    	<script th:inline="javascript">
+        	alert('[[${errorMessage}]]');
+        </script>
+    </div>
+    <script>
+    // Toggle between email and phone inputs
+    function toggleInput() {
+        var emailInput = document.getElementById("emailInput");
+        var phoneInput = document.getElementById("phoneInput");
+        var emailField = document.getElementById("email");
+        var mobileField = document.getElementById("mobileNumber");
+        var toggleText = document.getElementById("toggleText");
+
+        if (emailInput.style.display === "none") {
+            emailInput.style.display = "block";
+            phoneInput.style.display = "none";
+            toggleText.innerText = "Use Phone Number";
+            emailField.disabled = false;
+            mobileField.disabled = true;
+        } else {
+            emailInput.style.display = "none";
+            phoneInput.style.display = "flex";
+            toggleText.innerText = "Use Email ID";
+            emailField.disabled = true;
+            mobileField.disabled = false;
+        }
+    }
+
+    // Switch between Buyer and Seller tabs and ensure the form action is set correctly
+    function switchTab(tab) {
+        var buyerTab = document.getElementById("buyerTab");
+        var sellerTab = document.getElementById("sellerTab");
+        var loginTitle = document.getElementById("loginTitle");
+        var loginButton = document.getElementById("loginButton");
+        var registrationLink = document.getElementById("registrationLink");
+        var forgotLink = document.getElementById("forgotLink"); // Correct ID for forgot password link
+        var identity = document.getElementById("identity"); // The form element
+
+        if (tab === 'buyer') {
+            buyerTab.classList.add("active");
+            sellerTab.classList.remove("active");
+            loginTitle.innerText = "Buyer Login - Enter Email/Mobile number";
+            loginButton.innerText = "Login";
+            registrationLink.href = "/ecom/buyer/buyerRegistration";
+            forgotLink.href = "/ecom/buyer/ForgotPassword";
+            identity.setAttribute("action", "/ecom/buyer/handleLogin"); // Update form action for buyer
+            registrationLink.innerText = "Don't have an account? Register";
+        } else if (tab === 'seller') {
+            sellerTab.classList.add("active");
+            buyerTab.classList.remove("active");
+            loginTitle.innerText = "Seller Login - Enter Email/Mobile number";
+            loginButton.innerText = "Login";
+            registrationLink.href = "/seller/sellerRegistration";
+            forgotLink.href = "/seller/seller/ForgotPassword";
+            identity.setAttribute("action", "/seller/seller/handleLogin"); // Update form action for seller
+            registrationLink.innerText = "Don't have an account? Register";
+        }
+    }
+    </script>
+</body>
+</html>

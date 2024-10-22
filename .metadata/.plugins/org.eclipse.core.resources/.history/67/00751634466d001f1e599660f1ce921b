@@ -1,0 +1,30 @@
+package service;
+import java.sql.SQLException;
+import java.util.List;
+
+import dao.ProductDao;
+import dto.ProductDto;
+import dto.SellerDto;
+import entity.ProductEntity;
+import exception.InvalidInputException;
+public class ProductService {
+	private ProductDao productDao_obj=new ProductDao();
+	public void add_product(ProductEntity productEntity_obj) throws InvalidInputException {
+		if(productEntity_obj.getProduct_name().isEmpty()||productEntity_obj.getQuant()==0||productEntity_obj.getPrice_per_piece()==0) {
+			throw new InvalidInputException("Check whether you entered all fields or not...");
+		}
+		else {
+			productDao_obj.addProduct(productEntity_obj);
+		}
+	}
+	public List<ProductDto> display(int s_id) {
+		int id_noob=s_id.getS_id();
+		return productDao_obj.displayProducts(id_noob);
+	}
+	public void delete_Product(int d_id) {
+		productDao_obj.delete_Product(d_id);
+	}
+	public int getProductIdByNameAndSid(int s_id,String name) {
+		
+	}
+}

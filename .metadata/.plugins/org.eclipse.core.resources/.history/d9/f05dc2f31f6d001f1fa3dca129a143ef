@@ -1,0 +1,16 @@
+package entity;
+
+public class CategoryEntity {
+	private String cname;
+	public CategoryEntity(String cname) {
+		super();
+		this.cname = cname;
+	}
+	public String getCname() {
+		return cname;
+	}
+	public void setCname(String cname) {
+		this.cname = cname;
+	}
+	
+}

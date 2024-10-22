@@ -1,0 +1,16 @@
+package service;
+
+import java.util.List;
+
+import dao.InventoryDao;
+import dto.InventoryDto;
+import entity.InventoryEntity;
+public class InventoryService {
+	private InventoryDao inventoryDao_obj =new InventoryDao();
+	public void addInventory(InventoryEntity inventoryEntity_obj){
+		inventoryDao_obj.addInventory(inventoryEntity_obj);
+	}
+	public List<InventoryDto> check_inventory(int s_id) {
+		inventoryDao_obj.check_inventory(s_id);
+	}
+}

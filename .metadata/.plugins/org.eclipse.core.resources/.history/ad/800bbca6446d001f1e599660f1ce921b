@@ -1,0 +1,16 @@
+package service;
+
+import exception.InvalidInputException;
+
+public class InventoryService {
+	private SellerDao sellerdao_obj =new SellerDao();
+	public void register(SellerEntity sellerEntity_obj) throws InvalidInputException {
+		if (sellerEntity_obj.getName().isEmpty() || sellerEntity_obj.getEmail().isEmpty() || sellerEntity_obj.getPassword().isEmpty() || 
+				sellerEntity_obj.getPhno().isEmpty()  || sellerEntity_obj.getBus_name().isEmpty() || sellerEntity_obj.getBus_type().isEmpty()  || sellerEntity_obj.getBus_address().isEmpty()) {
+            throw new InvalidInputException("Check All the fields are correctly entered or not.......");
+        }
+		else {
+			sellerdao_obj.addSeller(sellerEntity_obj);
+		}
+	}
+}

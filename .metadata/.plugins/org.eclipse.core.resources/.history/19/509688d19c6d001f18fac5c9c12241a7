@@ -1,0 +1,78 @@
+package dao;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import dto.ProductDto;
+import entity.ProductEntity;
+import util.DbConnect;
+public class ProductDao {
+	private static Connection con;
+	public ProductDao(){
+		con=DbConnect.getInstance().getConnection();
+	}
+	public void addProduct(ProductEntity productEntity_obj) {
+		String sql="insert into products(s_id,pro_name,pro_desc,image,quantity,threshold,price_per_piece,discount_per_piece) values(?,?,?,?,?,?,?,?)";
+		try(PreparedStatement stmt = con.prepareStatement(sql)){
+			stmt.setInt(1, productEntity_obj.getS_id());
+			stmt.setString(2,productEntity_obj.getProduct_name());
+			stmt.setString(3,productEntity_obj.getPdesc());
+			stmt.setString(4,productEntity_obj.getImage());
+			stmt.setInt(5, productEntity_obj.getQuant());
+			stmt.setInt(6, productEntity_obj.getThreshold());
+			stmt.setDouble(7, productEntity_obj.getPrice_per_piece());
+			stmt.setDouble(8, productEntity_obj.getDiscount_per_piece());
+			int res_insert=stmt.executeUpdate();
+			if(res_insert==1) {
+				System.out.println("Successfully Added.....");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	public List<ProductDto> displayProducts(int id_noob) {
+		String sql="select * from products where s_id = ?";
+		List<ProductDto> productDto_objs=new ArrayList<>();
+		try(PreparedStatement stmt=con.prepareStatement(sql)){
+			stmt.setInt(1,id_noob);
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()) {
+				ProductDto productDto_obj=new ProductDto(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6)rs.getInt(6), 
+						rs.getInt(7), rs.getDouble(8), rs.getDouble(9), rs.getTimestamp(11), rs.getTimestamp(12));
+				productDto_objs.add(productDto_obj);	
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return productDto_objs;
+	}
+	public void delete_Product(int d_id) {
+		String sql="delete from products where p_id = ?";
+		try(PreparedStatement stmt=con.prepareStatement(sql)){
+			stmt.setInt(1,d_id);
+			int rowsDeleted = stmt.executeUpdate();
+			if(rowsDeleted==1) {
+				System.out.println("Successfully Deleted.....");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	public int getProductIdByImage(String name) {
+		String sql="select p_id from products where image = ?";
+		int dup=0;
+		try(PreparedStatement stmt=con.prepareStatement(sql)){
+			stmt.setString(1, name);
+			ResultSet rs=stmt.executeQuery();
+			if(rs.next()) {
+				dup=rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return dup;
+	}
+}

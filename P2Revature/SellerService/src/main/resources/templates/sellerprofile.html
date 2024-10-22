@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Profile Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> 
+    <style>
+        body {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .profile-sidebar {
+            background-color: #f8f9fa;
+            height: 100vh;
+            padding: 20px;
+            box-shadow: 2px 0px 5px rgba(0,0,0,0.1);
+        }
+
+        .profile-sidebar h4 {
+            margin-bottom: 20px;
+        }
+
+        .profile-sidebar .nav-link {
+            color: #333;
+            font-weight: 500;
+            border-radius: 5px;
+        }
+
+        .profile-sidebar .nav-link:hover {
+            background-color: #e9ecef;
+        }
+
+        .profile-content {
+            padding: 20px;
+            animation: fadeIn 0.5s;
+        }
+
+        .profile-card {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background-color: #fff;
+            transition: transform 0.3s ease;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .btn-cancel {
+            background-color: #f8d7da;
+            border: none;
+            color: #721c24;
+            margin-right: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .form-progress {
+            margin-top: 15px;
+        }
+
+        .faq-question {
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .faq-question:hover {
+            color: #0d6efd;
+        }
+
+        .progress {
+            height: 8px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block profile-sidebar">
+                <h4>Hello <span th:text="${seller.firstName}"></span>!</h4>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('personal-info')">Personal Information</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('manage-addresses')">Manage Addresses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('privacy-security')">Privacy & Security</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('notifications')">All Notifications</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/ecom/buyer/Logout}">Logout</a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Main content area -->
+            <main class="col-md-9 col-lg-10 profile-content">
+                <!-- Personal Information Section -->
+                <div id="personal-info" class="profile-card mb-4">
+                    <h3>Personal Information</h3>
+                    <form th:action="@{/seller/seller/updateProfile}" th:object="${seller}" method="post">
+                        <div class="mb-3">
+                            <label for="first-name" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="first-name"
+                                   th:field="*{firstName}" 
+                                   placeholder="Enter your first name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="last-name" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="last-name"
+                                   th:field="*{lastName}" 
+                                   placeholder="Enter your last name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email"
+                                   th:field="*{email}" 
+                                   placeholder="Enter your email address" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="mobile" class="form-label">Mobile Number</label>
+                            <input type="tel" class="form-control" id="mobile"
+                                   th:field="*{mobileNumber}" 
+                                   placeholder="Enter your mobile number" required>
+                        </div>
+
+                        <button type="button" class="btn btn-cancel" onclick="redirectToDashboardseller()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </form>
+                </div>
+
+                <!-- Manage Addresses Section -->
+                <div id="manage-addresses" class="profile-card mb-4 hidden">
+                    <h3>Manage Addresses</h3>
+                    <form th:action="@{/seller/seller/updateAddress}" th:object="${seller}" method="post">
+                        <div class="mb-3">
+                            <label for="street" class="form-label">Street Address</label>
+                            <input type="text" class="form-control" id="street"
+                                   th:field="*{street}" placeholder="Enter your street address" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="city" class="form-label">City</label>
+                            <input type="text" class="form-control" id="city"
+                                   th:field="*{city}" placeholder="Enter your city" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="state" class="form-label">State/Province</label>
+                            <input type="text" class="form-control" id="state"
+                                   th:field="*{state}" placeholder="Enter your state or province" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="postalCode" class="form-label">Postal Code</label>
+                            <input type="text" class="form-control" id="postalCode"
+                                   th:field="*{postalCode}" placeholder="Enter your postal code" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="country" class="form-label">Country</label>
+                            <input type="text" class="form-control" id="country"
+                                   th:field="*{country}" placeholder="Enter your country" required>
+                        </div>
+
+                        <button type="button" class="btn btn-cancel" onclick="redirectToDashboardseller()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Update Address</button>
+                    </form>
+                </div>
+
+                <!-- Privacy & Security Section -->
+                <div id="privacy-security" class="profile-card mb-4 hidden">
+                    <h3>Privacy & Security</h3>
+                    <form th:action="@{/seller/seller/changePassword}" method="post" onsubmit="return validatePasswordChange(event)">
+                        <div class="mb-3">
+                            <label for="current-password" class="form-label">Current Password</label>
+                            <input type="password" class="form-control" id="current-password" name="current-password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="new-password" class="form-label">New Password</label>
+                            <input type="password" class="form-control" id="new-password" name="new-password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirm-new-password" class="form-label">Confirm New Password</label>
+                            <input type="password" class="form-control" id="confirm-new-password" required>
+                        </div>
+                        <button type="button" class="btn btn-cancel" onclick="redirectToDashboardseller()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Change Password</button>
+                    </form><br><br>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#passwordResetModal">Reset Password</button>
+                </div>
+               
+                <!-- Notifications Section -->
+                <div id="notifications" class="profile-card mb-4 hidden">
+                    <h3>All Notifications</h3>
+                    <p>No notifications at the moment.</p>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Password Reset Modal -->
+    <div class="modal fade" id="passwordResetModal" tabindex="-1" aria-labelledby="passwordResetModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="passwordResetModalLabel">Password Reset</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Step 1: Enter Email -->
+                    <form id="step1" onsubmit="return sendPasswordResetEmail(event)">
+                        <div class="mb-3">
+                            <label for="reset-email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="reset-email" placeholder="Enter your email" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Verification Code</button>
+                    </form>
+
+                    <!-- Step 2: Enter Verification Code (Hidden initially) -->
+                    <form id="step2" class="hidden" onsubmit="return verifyCode(event)">
+                        <div class="mb-3">
+                            <label for="verification-code" class="form-label">Enter Verification Code</label>
+                            <input type="text" class="form-control" id="verification-code" placeholder="Enter the code" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Verify Code</button>
+                    </form>
+
+                    <!-- Step 3: Reset Password (Hidden initially) -->
+                    <form id="step3" class="hidden" onsubmit="resetPassword(event)">
+                        <div class="mb-3">
+                            <label for="new-passwordd" class="form-label">New Password</label>
+                            <input type="password" class="form-control" id="new-passwordd" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirm-password" class="form-label">Confirm New Password</label>
+                            <input type="password" class="form-control" id="confirm-password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Reset Password</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+    <script>
+    function redirectToDashboardseller() {
+        window.location.href = "/seller/SellerDashboard"; // Adjust the URL as per your actual route
+    }
+
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.profile-card');
+            sections.forEach(section => section.classList.add('hidden'));
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        function validatePasswordChange(event) {
+            event.preventDefault();
+            const newPassword = document.getElementById('new-password').value;
+            const confirmNewPassword = document.getElementById('confirm-new-password').value;
+
+            if (newPassword !== confirmNewPassword) {
+                alert('New passwords do not match. Please try again.');
+                return false; // Prevent form submission
+            }
+
+            // If validation passes, submit the form
+            event.target.submit();
+        }
+        
+        // Send Verification Email
+        function sendPasswordResetEmail(event) {
+            event.preventDefault();
+            const email = document.getElementById('reset-email').value;
+
+            fetch('/seller/api/send-verification/forgot', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({email: email}),
+            })
+            .then(response => response.text())
+            .then(message => {
+                alert(message);
+                    document.getElementById('step1').classList.add('hidden');
+                    document.getElementById('step2').classList.remove('hidden');
+            })
+            .catch(error => alert('Error sending email: ' + error));
+        }
+
+        // Verify Code
+        function verifyCode(event) {
+            event.preventDefault();
+            const verificationCode = document.getElementById('verification-code').value;
+
+            fetch('/seller/api/verify-code/forgot', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({code: verificationCode}),
+            })
+            .then(response => response.text())
+            .then(message => {
+                alert(message);
+                    document.getElementById('step2').classList.add('hidden');
+                    document.getElementById('step3').classList.remove('hidden');
+            
+            })
+            .catch(error => alert('Error verifying code: ' + error));
+        }
+
+        // Reset Password
+        function resetPassword(event) {
+            event.preventDefault();
+            const newPassword = document.getElementById('new-passwordd').value.trim();
+            const confirmPassword = document.getElementById('confirm-password').value.trim();
+
+            if (newPassword === confirmPassword) {
+                fetch('/seller/api/reset-password/forgot', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({ 
+                        'new-password': newPassword,
+                        'confirm-password': confirmPassword 
+                    }),
+                })
+                .then(response => response.text())
+                .then(message => {
+                    alert('Password reset successfully.');
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('passwordResetModal'));
+                    modal.hide();  // Close modal on success
+                })
+                .catch(error => alert('Error resetting password: ' + error));
+            } else {
+                alert('Passwords do not match. Please try again.');
+            }
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

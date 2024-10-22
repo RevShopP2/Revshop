@@ -1,0 +1,11 @@
+package entity;
+
+public class SellerEntity {
+	private String name;
+	private String email;
+	private String password;
+	private String phno;
+	private String bus_name;
+	private String bus_type;
+	private String bus_address;
+}

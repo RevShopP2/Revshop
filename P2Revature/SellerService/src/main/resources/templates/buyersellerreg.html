@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seller Registration</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<!-- Font Awesome CSS -->
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link
+	href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+	rel="stylesheet">
+<style>
+body {
+	margin: 0;
+	padding: 0;
+	background-color: #f4f4f4; /* Light grey background */
+	padding-top: 60px;
+	font-family: 'Poppins', sans-serif;
+}
+
+header {
+	display: flex;
+	flex-wrap: wrap; /* Allows items to wrap on smaller screens */
+	justify-content: space-between;
+	align-items: center;
+	background: rgb(238, 238, 213); /* Header background color */
+	padding: 10px 20px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	position: fixed; /* Fix the header to the top */
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 1000;
+}
+
+.logo img {
+	width: 50px; /* Set the width of the image */
+	height: 50px; /* Set the height of the image */
+	border-radius: 50%; /* Makes the image circular */
+	object-fit: cover; /* Ensures the image covers the container */
+	margin-right: 5px;
+	margin-left: 30px /* Space between the logo and other nav items */
+}
+
+/* Input search box styling */
+input[type="text"],input[type="password"],input[type="email"] {
+	border: 2px solid #ddd; /* Border color */
+	border-radius: 50px; /* Circular border */
+	padding: 10px 20px; /* Padding inside the input */
+	font-size: 16px; /* Font size for text inside input */
+	outline: none; /* Removes the default outline */
+	width: 680px; /* Adjust width of the search box */
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+input[type="text"]::placeholder {
+	color: #aaa; /* Color for the placeholder text */
+}
+
+/* Navigation */
+nav ul {
+	list-style: none;
+	display: flex;
+	gap: 15px;
+}
+
+nav ul li {
+	color: #fff; /* White text for navigation links */
+}
+
+/* Buttons */
+.account-icon, .cart-icon {
+	background: #fbfbfb; /* Light grey background */
+	color: #000000;
+	border: none;
+	padding: 10px 20px;
+	border-radius: 20px;
+	cursor: pointer;
+	transition: background 0.3s;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-size: 14px;
+}
+
+.account-icon:hover, .cart-icon:hover {
+	background: #865f1896; /* Darker grey on hover */
+}
+
+.cart-icon img, .account-icon img {
+	width: 20px;
+	height: 20px;
+}
+
+.dropdown {
+	position: relative;
+	display: inline-block;
+}
+
+.dropdown-menu {
+	display: none;
+	position: absolute;
+	background-color: #fff;
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+	/* Slight shadow for dropdown */
+	padding: 10px 0;
+	min-width: 200px;
+	right: 0;
+	z-index: 1;
+}
+
+.dropdown-menu li {
+	list-style: none;
+}
+
+.dropdown-menu li a {
+	color: #333;
+	padding: 10px 20px;
+	text-decoration: none;
+	display: block;
+	font-size: 14px;
+	transition: background-color 0.2s;
+}
+
+.dropdown-menu li a:hover {
+	background-color: #f1f1f1;
+}
+
+/* Show dropdown on hover */
+.dropdown:hover .dropdown-menu {
+	display: block;
+}
+
+/* Profile and Cart buttons container */
+.account-cart {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+/* Hover effect for profile and cart */
+.account-cart button:hover {
+	background-color: #f0f0f0;
+	transition: background-color 0.3s ease;
+}
+
+#search-btn {
+	background-color: #007bff; /* Button background color */
+	color: white; /* Button text color */
+	border: none; /* Remove border */
+	border-radius: 50px; /* Circular border */
+	padding: 10px 20px; /* Padding inside the button */
+	font-size: 16px; /* Font size for button text */
+	cursor: pointer; /* Change cursor on hover */
+	transition: background-color 0.3s; /* Smooth background transition */
+}
+.anchor {
+	text-decoration: none;
+	color: black;
+}
+
+.form-container {
+	margin-top: 150px;
+	margin-left: 350px;
+	width: 60%;
+}
+
+#buyerRegistrationForm {
+	background-color: #f3f3f3;
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+input {
+	width: 100%;
+	padding: 10px;
+	margin-bottom: 15px;
+	font-size: 16px;
+}
+
+.form-section {
+	display: none;
+}
+
+.form-section.active {
+	display: block;
+}
+
+.step-btn {
+	margin-top: 20px;
+}
+
+.section-heading {
+	font-size: 1.25rem;
+	font-weight: 500;
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+.valid-feedback {
+	display: none;
+	color: green;
+}
+
+.invalid-feedback {
+	display: none;
+	color: red;
+}
+
+input.valid {
+	border-color: green;
+}
+
+input.invalid {
+	border-color: red;
+}
+
+#bre {
+	border: 2px solid #ddd; /* Border color */
+	border-radius: 50px; /* Circular border */
+	padding: 10px 20px; /* Padding inside the input */
+	font-size: 16px; /* Font size for text inside input */
+	outline: none; /* Removes the default outline */
+	width: 680px !important; /* Width of the search box */
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	width: 50%; /* Optional shadow for depth */
+}
+
+#bre::placeholder {
+	color: #aaa; /* Color for the placeholder text */
+}
+
+/* Navigation */
+nav ul {
+	list-style: none;
+	display: flex;
+	gap: 15px;
+}
+
+nav ul li {
+	color: #333; /* Dark grey for navigation links */
+}
+
+/* Buttons */
+.account-icon, .cart-icon {
+	background: #fbfbfb;
+	color: #000000;
+	border: none;
+	padding: 10px 20px;
+	border-radius: 20px;
+	cursor: pointer;
+	transition: background 0.3s;
+	width: auto;
+	margin-right: 8px;
+}
+
+.account-icon:hover, .cart-icon:hover {
+	background: #865f1896; /* Darker grey on hover */
+}
+
+#breb {
+	background-color: #007bff;
+	color: white;
+	border: none;
+	border-radius: 50px;
+	padding: 10px 20px; /* Padding inside the button */
+	font-size: 16px; /* Font size for button text */
+	cursor: pointer; /* Change cursor on hover */
+	transition: background-color 0.3s; /* Smooth background transition */
+}
+
+#sellerreg, #sellerreg:hover {
+	text-decoration: none;
+	color: black;
+}
+button {
+	background-color: #007bff; /* Button background color */
+	color: white; /* Button text color */
+	border: none; /* Remove border */
+	border-radius: 50px; /* Circular border */
+	padding: 10px 20px; /* Padding inside the button */
+	font-size: 16px; /* Font size for button text */
+	cursor: pointer; /* Change cursor on hover */
+	transition: background-color 0.3s; /* Smooth background transition */
+}
+a{
+	text-decoration: none;
+	color: black;
+}
+</style>
+</head>
+<body>
+	<header>
+		<div class="logo">
+			<a th:href="@{/ecom/buyer/cancel}"> <img
+				th:src="@{/images/revshop-logo.jpg}">
+			</a>
+		</div>
+
+		<div class="search-container" style="margin-left: -20px;">
+			<form action="/products/search/buyerdashboard" method="post">
+				<input type="text" name="keyword" placeholder="Search for products"
+					th:value="${keyword}" id="search-input"
+					style="border-radius: 100px;"> <span id="mic-btn"
+					title="Click to speak" aria-label="Microphone"><svg
+						xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+						fill="currentColor" width="24px" height="24px">
+  <path
+							d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5.002 5.002 0 0 1-4 4.9V19h3a1 1 0 1 1 0 2h-8a1 1 0 1 1 0-2h3v-3.1a5.002 5.002 0 0 1-4-4.9 1 1 0 0 1 2 0 3 3 0 0 0 6 0 1 1 0 0 1 2 0z" />
+</svg> </span>
+				<button type="submit" id="search-btn" style="border-radius: 100px;">Search</button>
+			</form>
+		</div>
+
+		<div class="account-cart">
+			<div class="dropdown">
+				<button class="account-icon">
+					<span> <img
+						src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/profile-52e0dc.svg"
+						alt="profile">
+					</span> Profile
+				</button>
+				<ul class="dropdown-menu">
+					<li><a th:href="@{/ecom/buyer/buyerprofile}">My Profile</a></li>
+					<li><a th:href="@{/order/buyer}">Orders</a></li>
+					<li><a th:href="@{/wish/view}">Wishlist</a></li>
+
+					<li><a th:href="@{/ecom/buyer/Logout}">Logout</a></li>
+				</ul>
+			</div>
+			<a th:href="@{/cart/view}">
+				<button class="cart-icon">
+					<img
+						src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/header_cart-eed150.svg"
+						alt="Cart"> <span>Cart</span>
+				</button>
+			</a> <a th:href="@{/seller/sellerRegistration}" id="sellerreg"><button
+					class="account-icon">
+					<img
+						src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/Store-9eeae2.svg"
+						alt=" Become a Seller"> <span> Seller</span>
+				</button></a>
+			<button class="account-icon">
+				<img
+					src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/helpcenter-7d90c0.svg">
+			</button>
+		</div>
+	</header>
+	<div class="container-fluid form-container" style="margin-top:80px !important;">
+		<div class="card shadow" style="padding:20px !important;">
+			<h2 class="text-center">
+				<i class="fas fa-user-plus"></i> Seller Registration
+			</h2>
+			<!-- Step 1: Personal Details -->
+			<form th:action="@{/seller/sellerRegistration}" th:object="${seller}"
+				id="buyerRegistrationForm" class="needs-validation" novalidate
+				method="post">
+				<!-- Personal Details Section -->
+				<div id="step1" class="form-section active">
+					<h4 style="font-weight: 20px;" class="section-heading">Personal
+						Details</h4>
+					<div class="mb-3">
+						<label for="firstName" class="form-label"><i
+							class="fas fa-user"></i> First Name</label> <input type="text"
+							class="form-control" id="firstName" th:field="*{firstName}"
+							required>
+						<div class="invalid-feedback">Please enter your first name.</div>
+					</div>
+					<div class="mb-3">
+						<label for="lastName" class="form-label"><i
+							class="fas fa-user"></i> Last Name</label> <input type="text"
+							class="form-control" id="lastName" th:field="*{lastName}"
+							required>
+						<div class="invalid-feedback">Please enter your last name.</div>
+					</div>
+					<div class="mb-3">
+						<label for="bussinessName" class="form-label">Business
+							Name</label> <input type="text" class="form-control" id="bussinessName"
+							th:field="*{bussinessName}" required>
+						<div class="invalid-feedback">Please enter Business Name.</div>
+					</div>
+					<div class="mb-3">
+						<label for="mobileNumber" class="form-label"><i
+							class="fas fa-phone"></i> Mobile Number</label> <input type="text"
+							class="form-control" id="mobileNumber" th:field="*{mobileNumber}"
+							required>
+						<div class="valid-feedback">Looks good!</div>
+						<div class="invalid-feedback">Please enter a valid 10 digit
+							mobile number.</div>
+					</div>
+					<div class="mb-3">
+						<label for="password" class="form-label"><i
+							class="fas fa-lock"></i> Password</label> <input type="password"
+							class="form-control" id="password" th:field="*{password}"
+							required>
+						<div class="invalid-feedback">Please enter a password.</div>
+						<small id="passwordHelp" class="form-text text-muted">
+							Password must contain at least one uppercase letter, one
+							lowercase letter, one number, one special character, and be at
+							least 6 characters long. </small>
+					</div>
+					<!-- Progress Bar -->
+					<div class="progress mb-3">
+						<div id="passwordProgress" class="progress-bar" role="progressbar"
+							style="width: 0%;"></div>
+					</div>
+					<div class="mb-3" id="confirmPasswordContainer"
+						style="display: none;">
+						<label for="confirmPassword" class="form-label"><i
+							class="fas fa-lock"></i> Confirm Password</label> <input type="password"
+							class="form-control" id="confirmPassword" required>
+						<div class="invalid-feedback">Please confirm your password.</div>
+					</div>
+					<div class="mb-3">
+						<label for="email" class="form-label"><i
+							class="fas fa-envelope"></i> Email</label> <input type="email"
+							class="form-control" id="email" th:field="*{email}" required>
+						<div class="invalid-feedback">Please enter a valid email
+							address.</div>
+					</div>
+					<!-- Button to Send OTP -->
+					<button type="button" class="btn btn-info"
+						style="background-color: goldenrod; border-color: goldenrod;"
+						onclick="sendOtp()">Send OTP</button>
+					<!-- OTP Input -->
+					<div class="mb-3" id="otpSection" style="display: none;">
+						<label for="otp" class="form-label">Enter OTP</label> <input
+							type="text" class="form-control" id="otp"
+							placeholder="Enter the OTP sent to your email">
+						<div class="invalid-feedback">Please enter the OTP.</div>
+					</div>
+					<!-- Button to verify OTP -->
+					<button type="button" class="btn btn-primary step-btn"
+						id="verifyOtpBtn"
+						style="display: none; background-color: goldenrod; border-color: goldenrod;"
+						onclick="verifyOtp()">Verify OTP</button>
+					<!-- Button for next step -->
+					<button type="button" class="btn btn-primary step-btn"
+						id="nextStepBtn"
+						style="display: none; background-color: goldenrod; border-color: goldenrod;"
+						onclick="nextStep(2)" disabled>Next</button>
+				</div>
+				<!-- Address Details Section -->
+				<div id="step2" class="form-section">
+					<h4 class="section-heading">Address Details</h4>
+					<div class="mb-3">
+						<label for="street" class="form-label"><i
+							class="fas fa-map-marker-alt"></i> Street</label> <input type="text"
+							class="form-control" id="street" th:field="*{street}" required>
+						<div class="invalid-feedback">Please enter your street
+							address.</div>
+					</div>
+					<div class="mb-3">
+						<label for="city" class="form-label"><i
+							class="fas fa-map-marker-alt"></i> City</label> <input type="text"
+							class="form-control" id="city" th:field="*{city}" required>
+						<div class="invalid-feedback">Please enter your city.</div>
+					</div>
+					<div class="mb-3">
+						<label for="postalCode" class="form-label"><i
+							class="fas fa-map-marker-alt"></i> Postal Code</label> <input type="text"
+							class="form-control" id="postalCode" th:field="*{postalCode}"
+							required>
+						<div class="invalid-feedback">Please enter your postal code.</div>
+					</div>
+					<div class="mb-3">
+						<label for="state" class="form-label"><i
+							class="fas fa-map-marker-alt"></i> State</label> <input type="text"
+							class="form-control" id="state" th:field="*{state}" required>
+						<div class="invalid-feedback">Please enter your state.</div>
+					</div>
+					<div class="mb-3">
+						<label for="country" class="form-label"><i
+							class="fas fa-map-marker-alt"></i> Country</label> <input type="text"
+							class="form-control" id="country" th:field="*{country}" required>
+						<div class="invalid-feedback">Please enter your country.</div>
+					</div>
+					<button type="button"
+						style="background-color: goldenrod; border-color: goldenrod;"
+						class="btn btn-secondary step-btn" onclick="previousStep(1)">Previous</button>
+					<button type="submit"
+						style="background-color: goldenrod; border-color: goldenrod;"
+						class="btn btn-success step-btn">Submit</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<!-- Bootstrap JS and Popper.js -->
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+	<script>
+        // Function to send OTP to the provided email
+        function sendOtp() {
+            const email = document.getElementById('email').value;
+            if (email) {
+                fetch('/seller/api/send-verificationseller?email=' + email, { method: 'POST' })
+                .then(response => {
+                    if (response.ok) {
+                        alert('OTP sent to ' + email);
+                        document.getElementById('otpSection').style.display = 'block';
+                        document.getElementById('verifyOtpBtn').style.display = 'block';
+                    } else {
+                        alert('Failed to send OTP. Please try again.');
+                    }
+                });
+            } else {
+                alert('Please enter a valid email address.');
+            }
+        }
+
+        // Function to verify the OTP
+        function verifyOtp() {
+            const email = document.getElementById('email').value;
+            const otp = document.getElementById('otp').value;
+            fetch('/seller/api/verify-codeseller?email=' + email + '&code=' + otp, { method: 'POST' })
+            .then(response => {
+                if (response.ok) {
+                    alert('OTP verified successfully.');
+                    document.getElementById('nextStepBtn').style.display = 'block';
+                } else {
+                    alert('Invalid OTP. Please try again.');
+                }
+            });
+        }
+
+        // Check if password meets criteria and toggle confirm password field
+        const passwordInput = document.getElementById('password');
+        const progressBar = document.getElementById('passwordProgress');
+        const confirmPasswordContainer = document.getElementById('confirmPasswordContainer');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+
+        passwordInput.addEventListener('input', function () {
+            const password = passwordInput.value;
+            // Regular expressions for password criteria
+            const regexUpper = /[A-Z]/;
+            const regexLower = /[a-z]/;
+            const regexNumber = /[0-9]/;
+            const regexSpecial = /[!@#$%^&*(),.?":{}|<>]/;
+            // Check password criteria
+            const criteria = [
+                regexUpper.test(password),
+                regexLower.test(password),
+                regexNumber.test(password),
+                regexSpecial.test(password),
+                password.length >= 6
+            ];
+            const metCriteria = criteria.filter(Boolean).length;
+            const totalCriteria = criteria.length;
+            // Update progress bar
+            const percentage = (metCriteria / totalCriteria) * 100;
+            progressBar.style.width = percentage + '%';
+            progressBar.className = 'progress-bar ' + (percentage === 100 ? 'bg-success' : 'bg-danger');
+            // Show confirm password field if all criteria are met
+            confirmPasswordContainer.style.display = percentage === 100 ? 'block' : 'none';
+            // Check if passwords match
+            confirmPasswordInput.addEventListener('input', function () {
+                if (confirmPasswordInput.value === password) {
+                    confirmPasswordInput.style.borderColor = 'green';
+                    document.getElementById('nextStepBtn').disabled = false;
+                } else {
+                    confirmPasswordInput.style.borderColor = 'red';
+                    document.getElementById('nextStepBtn').disabled = true;
+                }
+            });
+        });
+
+        // Function to move to the next step
+        function nextStep(step) {
+            const currentStep = document.querySelector('.form-section.active');
+            const nextStep = document.getElementById('step' + step);
+            if (currentStep) {
+                currentStep.classList.remove('active');
+            }
+            if (nextStep) {
+                nextStep.classList.add('active');
+            }
+        }
+
+        // Function to move to the previous step
+        function previousStep(step) {
+            nextStep(step);
+        }
+    </script>
+</body>
+</html>

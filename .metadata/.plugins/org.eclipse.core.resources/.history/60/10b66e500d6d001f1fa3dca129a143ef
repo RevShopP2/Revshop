@@ -1,0 +1,12 @@
+package service;
+
+import dao.CategoryDao;
+import entity.CategoryEntity;
+
+public class CategoryService {
+	private CategoryDao categoryDao_obj=new CategoryDao();
+	public void add_product(CategoryEntity categoryEntity_obj) {
+		categoryDao_obj.addCategory(categoryEntity_obj);
+	}
+	public Catego
+}

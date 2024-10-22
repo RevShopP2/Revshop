@@ -1,0 +1,8 @@
+package dto;
+
+public class InventoryDto {
+	private String pro_name;
+	private int quant;
+	private int threshold;
+	
+}

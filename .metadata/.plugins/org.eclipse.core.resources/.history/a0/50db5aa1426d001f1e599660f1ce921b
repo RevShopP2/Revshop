@@ -1,0 +1,9 @@
+package entity;
+
+public class InventoryEntity {
+	private int p_id;
+	private String pro_name;
+	private int s_id;
+	private int quant;
+	private int thre
+}

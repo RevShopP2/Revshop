@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="org.slf4j.LoggerFactory"/>
+    <fullyQualifiedTypeName name="java.lang.System"/>
+    <fullyQualifiedTypeName name="java.util.Map.Entry"/>
+    <fullyQualifiedTypeName name="java.time.LocalDateTime"/>
+    <fullyQualifiedTypeName name="java.util.Optional"/>
+    <fullyQualifiedTypeName name="java.util.Arrays"/>
+    <fullyQualifiedTypeName name="util.DbConnect"/>
+    <fullyQualifiedTypeName name="entity.BuyerEntity"/>
+    <fullyQualifiedTypeName name="dao.BuyerDao"/>
+    <fullyQualifiedTypeName name="service.BuyerService"/>
+    <fullyQualifiedTypeName name="service.SellerService"/>
+    <fullyQualifiedTypeName name="dao.SellerDao"/>
+    <fullyQualifiedTypeName name="entity.SellerEntity"/>
+    <fullyQualifiedTypeName name="dto.SellerDto"/>
+    <fullyQualifiedTypeName name="entity.ProductEntity"/>
+    <fullyQualifiedTypeName name="entity.CategoryEntity"/>
+    <fullyQualifiedTypeName name="exception.InvalidInputException"/>
+    <fullyQualifiedTypeName name="entity.InventoryEntity"/>
+</qualifiedTypeNameHistroy>

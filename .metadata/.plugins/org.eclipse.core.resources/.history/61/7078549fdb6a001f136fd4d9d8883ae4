@@ -1,0 +1,8 @@
+package entity;
+
+public class SellerEntity {
+	private String name;
+	private String email;
+	private String password;
+	private String p
+}
