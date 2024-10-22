@@ -1,7 +1,0 @@
-package entity;
-
-public class InventoryEntity {
-	private int p_id;
-	private String pro_name;
-	privat
-}

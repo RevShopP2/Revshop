@@ -1,7 +1,0 @@
-package exception;
-
-public class InvalidInputException {
-	public InvalidInputException(String msg) {
-		super(msg);
-	}
-}

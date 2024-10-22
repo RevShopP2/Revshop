@@ -1,6 +1,0 @@
-package entity;
-
-public class BuyerEntity {
-	private b_id int;
-	
-}

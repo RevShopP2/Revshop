@@ -1,9 +1,0 @@
-package dto;
-
-public class BuyerDto {
-	private String name;
-	private String email;
-	private String password;
-	private int phno;
-	private String address;
-}

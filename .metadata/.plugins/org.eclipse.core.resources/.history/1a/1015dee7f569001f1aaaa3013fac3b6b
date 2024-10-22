@@ -1,7 +1,0 @@
-package entity;
-
-public class BuyerEntity {
-	private int b_id;
-	private String name;
-	
-}

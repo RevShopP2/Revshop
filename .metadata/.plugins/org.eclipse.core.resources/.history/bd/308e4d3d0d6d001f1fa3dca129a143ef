@@ -1,7 +1,0 @@
-package dto;
-
-public class CategoryDto {
-	private int cat_id;
-	private String cname;
-	
-}
